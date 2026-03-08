@@ -1,0 +1,1076 @@
+{
+  "sourceLanguage" : "de",
+  "strings" : {
+    "Aktiv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        }
+      }
+    },
+    "Pausiert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        }
+      }
+    },
+    "(Vorschau)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(Preview)"
+          }
+        }
+      }
+    },
+    "Heute: %lld umbenannt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today: %lld renamed"
+          }
+        }
+      }
+    },
+    "Keine Umbenennungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No renames"
+          }
+        }
+      }
+    },
+    "Alle anzeigen..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all..."
+          }
+        }
+      }
+    },
+    "Einstellungen..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings..."
+          }
+        }
+      }
+    },
+    "Beenden" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
+          }
+        }
+      }
+    },
+    "Allgemein" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
+      }
+    },
+    "Ordner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folders"
+          }
+        }
+      }
+    },
+    "KI" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI"
+          }
+        }
+      }
+    },
+    "Aktivität" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        }
+      }
+    },
+    "Beim Anmelden starten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start at login"
+          }
+        }
+      }
+    },
+    "Autostart" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autostart"
+          }
+        }
+      }
+    },
+    "Vorschau-Modus (Dry-Run)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview mode (Dry-Run)"
+          }
+        }
+      }
+    },
+    "Wenn aktiv, werden Umbenennungen nur simuliert – keine Dateien geändert." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When enabled, renames are only simulated – no files are changed."
+          }
+        }
+      }
+    },
+    "Modus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode"
+          }
+        }
+      }
+    },
+    "Sprache" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        }
+      }
+    },
+    "Deutsch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "German"
+          }
+        }
+      }
+    },
+    "English" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        }
+      }
+    },
+    "Änderungen an der Sprache werden nach Neustart wirksam." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language changes will take effect after restarting."
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "Config-Pfad" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Config path"
+          }
+        }
+      }
+    },
+    "Datenbank" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Database"
+          }
+        }
+      }
+    },
+    "Info" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        }
+      }
+    },
+    "Überwachte Ordner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watched folders"
+          }
+        }
+      }
+    },
+    "Ordner hinzufügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add folder"
+          }
+        }
+      }
+    },
+    "%lld Ordner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld folders"
+          }
+        }
+      }
+    },
+    "Unterordner einschließen (Rekursiv)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include subfolders (Recursive)"
+          }
+        }
+      }
+    },
+    "Verarbeitungsverzögerung: %llds" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing delay: %llds"
+          }
+        }
+      }
+    },
+    "Polling-Intervall: %llds" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polling interval: %llds"
+          }
+        }
+      }
+    },
+    "Optionen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options"
+          }
+        }
+      }
+    },
+    "Ignorierte Ordner: .Trash, node_modules, .git, __pycache__, .venv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignored folders: .Trash, node_modules, .git, __pycache__, .venv"
+          }
+        }
+      }
+    },
+    "Ignorierte Dateien: Bilder, Musik, Video, Design, Systemdateien" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignored files: Images, Music, Video, Design, System files"
+          }
+        }
+      }
+    },
+    "Ignorierte Präfixe: IMG_, Screenshot, Bildschirmfoto, ." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignored prefixes: IMG_, Screenshot, Bildschirmfoto, ."
+          }
+        }
+      }
+    },
+    "Ausschlüsse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclusions"
+          }
+        }
+      }
+    },
+    "Bestehende Dateien jetzt verarbeiten" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Process existing files now"
+          }
+        }
+      }
+    },
+    "Achtung: Dies benennt alle bestehenden Dateien um, die dem Namensschema noch nicht entsprechen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warning: This will rename all existing files that don't match the naming scheme yet."
+          }
+        }
+      }
+    },
+    "Aktionen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actions"
+          }
+        }
+      }
+    },
+    "Ordner zum Überwachen auswählen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select folder to watch"
+          }
+        }
+      }
+    },
+    "Provider" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provider"
+          }
+        }
+      }
+    },
+    "Aus (nur Keywords)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off (keywords only)"
+          }
+        }
+      }
+    },
+    "Anthropic (Claude)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anthropic (Claude)"
+          }
+        }
+      }
+    },
+    "OpenAI (GPT)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI (GPT)"
+          }
+        }
+      }
+    },
+    "Ollama (Lokal)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ollama (Local)"
+          }
+        }
+      }
+    },
+    "Custom Endpoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom endpoint"
+          }
+        }
+      }
+    },
+    "KI-Provider" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI Provider"
+          }
+        }
+      }
+    },
+    "API Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key"
+          }
+        }
+      }
+    },
+    "Einen Key erhältst du auf console.anthropic.com" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get a key at console.anthropic.com"
+          }
+        }
+      }
+    },
+    "Einen Key erhältst du auf platform.openai.com" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get a key at platform.openai.com"
+          }
+        }
+      }
+    },
+    "Modell" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model"
+          }
+        }
+      }
+    },
+    "Claude Haiku (schnell, günstig)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Haiku (fast, affordable)"
+          }
+        }
+      }
+    },
+    "Claude Sonnet (ausgewogen)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Sonnet (balanced)"
+          }
+        }
+      }
+    },
+    "Claude Opus (präzise, teuer)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Opus (precise, expensive)"
+          }
+        }
+      }
+    },
+    "GPT-4o Mini (schnell, günstig)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPT-4o Mini (fast, affordable)"
+          }
+        }
+      }
+    },
+    "GPT-4o (ausgewogen)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPT-4o (balanced)"
+          }
+        }
+      }
+    },
+    "Schwellwert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Threshold"
+          }
+        }
+      }
+    },
+    "Konfidenz-Schwellwert" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confidence threshold"
+          }
+        }
+      }
+    },
+    "Unter diesem Wert wird die nächste Analyse-Stufe verwendet. Niedrigerer Wert = mehr Keyword-Ergebnisse, höherer Wert = mehr KI-Nutzung." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Below this value, the next analysis stage is used. Lower value = more keyword results, higher value = more AI usage."
+          }
+        }
+      }
+    },
+    "Verbindung testen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test connection"
+          }
+        }
+      }
+    },
+    "Teste Verbindung..." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testing connection..."
+          }
+        }
+      }
+    },
+    "Verbindungstest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection test"
+          }
+        }
+      }
+    },
+    "Trial" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trial"
+          }
+        }
+      }
+    },
+    "Trial aktiv: noch %lld Tage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trial active: %lld days remaining"
+          }
+        }
+      }
+    },
+    "Trial abgelaufen – eigenen API Key eingeben" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trial expired – enter your own API key"
+          }
+        }
+      }
+    },
+    "Noch kein Trial gestartet. Wird beim ersten Start mit KI-Provider aktiviert." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trial not started yet. Will be activated on first use with an AI provider."
+          }
+        }
+      }
+    },
+    "Eigener API Key aktiv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Own API key active"
+          }
+        }
+      }
+    },
+    "Heute: %lld Umbenennungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today: %lld renames"
+          }
+        }
+      }
+    },
+    "Aktualisieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "History löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear history"
+          }
+        }
+      }
+    },
+    "Noch keine Umbenennungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No renames yet"
+          }
+        }
+      }
+    },
+    "Keine echten Umbenennungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No actual renames"
+          }
+        }
+      }
+    },
+    "Keine Vorschau-Einträge" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No preview entries"
+          }
+        }
+      }
+    },
+    "Neue Dateien in überwachten Ordnern werden automatisch umbenannt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New files in watched folders will be renamed automatically."
+          }
+        }
+      }
+    },
+    "Echte Umbenennungen erscheinen hier, wenn der Vorschau-Modus deaktiviert ist." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual renames appear here when preview mode is disabled."
+          }
+        }
+      }
+    },
+    "Aktiviere den Vorschau-Modus in den Einstellungen, um Umbenennungen zu simulieren." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable preview mode in settings to simulate renames."
+          }
+        }
+      }
+    },
+    "History löschen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear history?"
+          }
+        }
+      }
+    },
+    "Abbrechen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Löschen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "Alle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
+    },
+    "Umbenannt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renamed"
+          }
+        }
+      }
+    },
+    "Vorschau" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        }
+      }
+    },
+    "VORSCHAU" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PREVIEW"
+          }
+        }
+      }
+    },
+    "Im Finder anzeigen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reveal in Finder"
+          }
+        }
+      }
+    },
+    "Umbenennung rückgängig" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo rename"
+          }
+        }
+      }
+    },
+    "Dateiname" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filename"
+          }
+        }
+      }
+    },
+    "PDF" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        }
+      }
+    },
+    "OpenClark" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenClark"
+          }
+        }
+      }
+    },
+    "Welche Ordner soll ich überwachen?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which folders should I watch?"
+          }
+        }
+      }
+    },
+    "Neue Dateien in diesen Ordnern werden automatisch umbenannt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New files in these folders will be renamed automatically."
+          }
+        }
+      }
+    },
+    "KI-Analyse aktivieren?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable AI analysis?"
+          }
+        }
+      }
+    },
+    "Mit KI werden auch komplexe Dateien korrekt erkannt. Ohne KI funktioniert die Keyword-Erkennung trotzdem für ~80% der Fälle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI also correctly identifies complex files. Without AI, keyword detection still works for ~80% of cases."
+          }
+        }
+      }
+    },
+    "KI-Analyse aktivieren" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable AI analysis"
+          }
+        }
+      }
+    },
+    "API Key (optional)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key (optional)"
+          }
+        }
+      }
+    },
+    "Du kannst auch erstmal ohne Key starten – die 14-Tage Testphase wird automatisch aktiviert." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can start without a key – the 14-day trial will be activated automatically."
+          }
+        }
+      }
+    },
+    "Keyword-Erkennung funktioniert auch ohne KI. Du kannst KI jederzeit später in den Einstellungen aktivieren." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyword detection works without AI. You can enable AI anytime later in settings."
+          }
+        }
+      }
+    },
+    "Fertig!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done!"
+          }
+        }
+      }
+    },
+    "OpenClark arbeitet jetzt im Hintergrund.\nNeue Dateien werden automatisch umbenannt." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenClark is now working in the background.\nNew files will be renamed automatically."
+          }
+        }
+      }
+    },
+    "%lld Ordner überwacht" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld folders watched"
+          }
+        }
+      }
+    },
+    "KI-Analyse aktiv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI analysis active"
+          }
+        }
+      }
+    },
+    "Keyword-Modus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyword mode"
+          }
+        }
+      }
+    },
+    "Zurück" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    },
+    "Weiter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
+    "Fertig" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "OpenClark Einstellungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenClark Settings"
+          }
+        }
+      }
+    },
+    "Filter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        }
+      }
+    },
+    "Verarbeitete alle Dateien in den überwachten Ordnern, die noch nicht umbenannt wurden." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processes all files in watched folders that haven't been renamed yet."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

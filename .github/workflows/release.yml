@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build App (Release)
+        run: |
+          xcodebuild -scheme OpenClark \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            build
+
+      - name: Build CLI (Release)
+        run: |
+          xcodebuild -scheme OpenClarkCLI \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            build
+
+      - name: Get Version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create DMG
+        run: |
+          APP_PATH="build/Build/Products/Release/OpenClark.app"
+          DMG_NAME="OpenClark-${{ steps.version.outputs.VERSION }}.dmg"
+
+          # Temp-Ordner für DMG-Inhalt
+          mkdir -p dmg_content
+          cp -R "$APP_PATH" dmg_content/
+          ln -s /Applications dmg_content/Applications
+
+          # DMG erstellen
+          hdiutil create -volname "OpenClark" \
+            -srcfolder dmg_content \
+            -ov -format UDZO \
+            "$DMG_NAME"
+
+          echo "DMG_PATH=$DMG_NAME" >> $GITHUB_ENV
+
+      - name: Package CLI
+        run: |
+          CLI_PATH="build/Build/Products/Release/openclark"
+          CLI_TAR="openclark-cli-${{ steps.version.outputs.VERSION }}-macos.tar.gz"
+
+          tar -czf "$CLI_TAR" -C "$(dirname $CLI_PATH)" "$(basename $CLI_PATH)"
+
+          echo "CLI_TAR_PATH=$CLI_TAR" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: OpenClark v${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            ${{ env.DMG_PATH }}
+            ${{ env.CLI_TAR_PATH }}
+          body: |
+            ## OpenClark v${{ steps.version.outputs.VERSION }}
+
+            ### Installation
+
+            **App (GUI):**
+            1. `OpenClark-${{ steps.version.outputs.VERSION }}.dmg` herunterladen
+            2. OpenClark.app in den Applications-Ordner ziehen
+            3. App starten – sie erscheint in der Menubar
+
+            **CLI:**
+            ```bash
+            tar -xzf openclark-cli-${{ steps.version.outputs.VERSION }}-macos.tar.gz
+            sudo mv openclark /usr/local/bin/
+            openclark --help
+            ```
+
+            **Homebrew (bald):**
+            ```bash
+            brew install --cask openclark
+            ```
