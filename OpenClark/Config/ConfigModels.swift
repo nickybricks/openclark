@@ -49,8 +49,10 @@ struct AppConfiguration: Codable, Sendable {
     var excludedExtensions: [String]?
     var excludedPrefixes: [String]?
     var excludedDirectories: [String]?
-    // Built-in Ausschlüsse die der User wieder aktiviert hat
+    // Built-in Ausschlüsse die der User deaktiviert hat
     var enabledBuiltInExtensions: [String]?
+    var disabledBuiltInPrefixes: [String]?
+    var disabledBuiltInDirectories: [String]?
 
     enum LLMProviderType: String, Codable, Sendable, CaseIterable {
         case anthropic

@@ -44,7 +44,9 @@ enum Defaults {
             excludedExtensions: nil,
             excludedPrefixes: nil,
             excludedDirectories: nil,
-            enabledBuiltInExtensions: nil
+            enabledBuiltInExtensions: nil,
+            disabledBuiltInPrefixes: nil,
+            disabledBuiltInDirectories: nil
         )
     }
 }

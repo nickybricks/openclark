@@ -60,7 +60,9 @@ enum FileFilters {
     /// Effektive ausgeschlossene Prefixes unter Berücksichtigung der Config.
     static func effectiveExcludedPrefixes(config: AppConfiguration? = nil) -> [String] {
         let cfg = config ?? AppConfig.shared.config
-        var result = builtInExcludedPrefixes
+        let disabled = Set(cfg.disabledBuiltInPrefixes ?? [])
+
+        var result = builtInExcludedPrefixes.filter { !disabled.contains($0) }
 
         if let custom = cfg.excludedPrefixes {
             result.append(contentsOf: custom)
@@ -72,7 +74,9 @@ enum FileFilters {
     /// Effektive ausgeschlossene Ordner unter Berücksichtigung der Config.
     static func effectiveExcludedDirectories(config: AppConfiguration? = nil) -> Set<String> {
         let cfg = config ?? AppConfig.shared.config
-        var result = builtInExcludedDirectories
+        let disabled = Set(cfg.disabledBuiltInDirectories ?? [])
+
+        var result = builtInExcludedDirectories.filter { !disabled.contains($0) }
 
         if let custom = cfg.excludedDirectories {
             for dir in custom {

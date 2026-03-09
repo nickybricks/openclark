@@ -13,6 +13,10 @@ struct RulesTab: View {
     @State private var additionalBuiltInKeywords: [String: [String]]
     @State private var removedBuiltInKeywords: [String: [String]]
 
+    // Deaktivierte Built-in Prefixes/Directories
+    @State private var disabledBuiltInPrefixes: Set<String>
+    @State private var disabledBuiltInDirectories: Set<String>
+
     // Neue Kategorie
     @State private var showAddCategory = false
     @State private var newCategoryName = ""
@@ -43,6 +47,8 @@ struct RulesTab: View {
         _enabledBuiltInExtensions = State(initialValue: Set(c.enabledBuiltInExtensions ?? []))
         _additionalBuiltInKeywords = State(initialValue: c.additionalBuiltInKeywords ?? [:])
         _removedBuiltInKeywords = State(initialValue: c.removedBuiltInKeywords ?? [:])
+        _disabledBuiltInPrefixes = State(initialValue: Set(c.disabledBuiltInPrefixes ?? []))
+        _disabledBuiltInDirectories = State(initialValue: Set(c.disabledBuiltInDirectories ?? []))
     }
 
     var body: some View {
@@ -385,13 +391,22 @@ struct RulesTab: View {
         // Präfixe
         Section {
             ForEach(FileFilters.builtInExcludedPrefixes, id: \.self) { prefix in
+                let isActive = !disabledBuiltInPrefixes.contains(prefix)
                 HStack {
+                    Toggle("", isOn: Binding(
+                        get: { isActive },
+                        set: { enabled in
+                            if enabled { disabledBuiltInPrefixes.remove(prefix) }
+                            else { disabledBuiltInPrefixes.insert(prefix) }
+                            saveExclusions()
+                        }
+                    ))
+                    .toggleStyle(.checkbox)
+                    .labelsHidden()
+
                     Text(prefix)
                         .font(.system(.body, design: .monospaced))
-                    Spacer()
-                    Text("Built-in")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(isActive ? .primary : .secondary)
                 }
             }
 
@@ -438,15 +453,24 @@ struct RulesTab: View {
         // Ordner
         Section {
             ForEach(Array(FileFilters.builtInExcludedDirectories).sorted(), id: \.self) { dir in
+                let isActive = !disabledBuiltInDirectories.contains(dir)
                 HStack {
+                    Toggle("", isOn: Binding(
+                        get: { isActive },
+                        set: { enabled in
+                            if enabled { disabledBuiltInDirectories.remove(dir) }
+                            else { disabledBuiltInDirectories.insert(dir) }
+                            saveExclusions()
+                        }
+                    ))
+                    .toggleStyle(.checkbox)
+                    .labelsHidden()
+
                     Image(systemName: "folder.fill")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(isActive ? .secondary : .tertiary)
                     Text(dir)
                         .font(.system(.body, design: .monospaced))
-                    Spacer()
-                    Text("Built-in")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(isActive ? .primary : .secondary)
                 }
             }
 
@@ -718,6 +742,8 @@ struct RulesTab: View {
         customExcludedPrefixes = []
         customExcludedDirectories = []
         enabledBuiltInExtensions = []
+        disabledBuiltInPrefixes = []
+        disabledBuiltInDirectories = []
         newKeywordText = [:]
         newBuiltInKeywordText = [:]
         saveCategories()
@@ -741,6 +767,8 @@ struct RulesTab: View {
             cfg.excludedPrefixes = customExcludedPrefixes.isEmpty ? nil : customExcludedPrefixes
             cfg.excludedDirectories = customExcludedDirectories.isEmpty ? nil : customExcludedDirectories
             cfg.enabledBuiltInExtensions = enabledBuiltInExtensions.isEmpty ? nil : Array(enabledBuiltInExtensions)
+            cfg.disabledBuiltInPrefixes = disabledBuiltInPrefixes.isEmpty ? nil : Array(disabledBuiltInPrefixes)
+            cfg.disabledBuiltInDirectories = disabledBuiltInDirectories.isEmpty ? nil : Array(disabledBuiltInDirectories)
         }
     }
 }
