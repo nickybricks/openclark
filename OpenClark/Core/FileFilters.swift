@@ -38,7 +38,8 @@ enum FileFilters {
     /// Effektive ausgeschlossene Extensions unter Berücksichtigung der Config.
     static func effectiveExcludedExtensions(config: AppConfiguration? = nil) -> Set<String> {
         let cfg = config ?? AppConfig.shared.config
-        var result = builtInExcludedExtensions
+        let deleted = Set(cfg.deletedBuiltInExtensions ?? [])
+        var result = builtInExcludedExtensions.filter { !deleted.contains($0) }
 
         // Built-in Ausschlüsse entfernen die der User wieder aktiviert hat
         if let enabled = cfg.enabledBuiltInExtensions {
@@ -61,8 +62,9 @@ enum FileFilters {
     static func effectiveExcludedPrefixes(config: AppConfiguration? = nil) -> [String] {
         let cfg = config ?? AppConfig.shared.config
         let disabled = Set(cfg.disabledBuiltInPrefixes ?? [])
+        let deleted = Set(cfg.deletedBuiltInPrefixes ?? [])
 
-        var result = builtInExcludedPrefixes.filter { !disabled.contains($0) }
+        var result = builtInExcludedPrefixes.filter { !disabled.contains($0) && !deleted.contains($0) }
 
         if let custom = cfg.excludedPrefixes {
             result.append(contentsOf: custom)
@@ -75,8 +77,9 @@ enum FileFilters {
     static func effectiveExcludedDirectories(config: AppConfiguration? = nil) -> Set<String> {
         let cfg = config ?? AppConfig.shared.config
         let disabled = Set(cfg.disabledBuiltInDirectories ?? [])
+        let deleted = Set(cfg.deletedBuiltInDirectories ?? [])
 
-        var result = builtInExcludedDirectories.filter { !disabled.contains($0) }
+        var result = builtInExcludedDirectories.filter { !disabled.contains($0) && !deleted.contains($0) }
 
         if let custom = cfg.excludedDirectories {
             for dir in custom {

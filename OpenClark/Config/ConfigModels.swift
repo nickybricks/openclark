@@ -54,6 +54,12 @@ struct AppConfiguration: Codable, Sendable {
     var disabledBuiltInPrefixes: [String]?
     var disabledBuiltInDirectories: [String]?
 
+    // Komplett gelöschte Built-in Einträge (durch Reset wiederherstellbar)
+    var deletedBuiltInCategories: [String]?
+    var deletedBuiltInExtensions: [String]?
+    var deletedBuiltInPrefixes: [String]?
+    var deletedBuiltInDirectories: [String]?
+
     enum LLMProviderType: String, Codable, Sendable, CaseIterable {
         case anthropic
         case openai

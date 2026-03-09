@@ -86,6 +86,7 @@ enum CategoryDefinitions {
     static func effectiveCategories(config: AppConfiguration? = nil) -> [Category] {
         let cfg = config ?? AppConfig.shared.config
         let disabled = Set(cfg.disabledBuiltInCategories ?? [])
+        let deleted = Set(cfg.deletedBuiltInCategories ?? [])
 
         // Built-in Kategorien filtern + Keyword-Overrides anwenden
         let added = cfg.additionalBuiltInKeywords ?? [:]
@@ -93,7 +94,7 @@ enum CategoryDefinitions {
 
         var result: [Category] = []
         for cat in all {
-            guard !disabled.contains(cat.name) else { continue }
+            guard !disabled.contains(cat.name) && !deleted.contains(cat.name) else { continue }
             var keywords = cat.keywords
 
             // Entfernte Keywords rausfiltern

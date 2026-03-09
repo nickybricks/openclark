@@ -17,6 +17,12 @@ struct RulesTab: View {
     @State private var disabledBuiltInPrefixes: Set<String>
     @State private var disabledBuiltInDirectories: Set<String>
 
+    // Gelöschte Built-in Einträge
+    @State private var deletedBuiltInCategories: Set<String>
+    @State private var deletedBuiltInExtensions: Set<String>
+    @State private var deletedBuiltInPrefixes: Set<String>
+    @State private var deletedBuiltInDirectories: Set<String>
+
     // Neue Kategorie
     @State private var showAddCategory = false
     @State private var newCategoryName = ""
@@ -49,6 +55,10 @@ struct RulesTab: View {
         _removedBuiltInKeywords = State(initialValue: c.removedBuiltInKeywords ?? [:])
         _disabledBuiltInPrefixes = State(initialValue: Set(c.disabledBuiltInPrefixes ?? []))
         _disabledBuiltInDirectories = State(initialValue: Set(c.disabledBuiltInDirectories ?? []))
+        _deletedBuiltInCategories = State(initialValue: Set(c.deletedBuiltInCategories ?? []))
+        _deletedBuiltInExtensions = State(initialValue: Set(c.deletedBuiltInExtensions ?? []))
+        _deletedBuiltInPrefixes = State(initialValue: Set(c.deletedBuiltInPrefixes ?? []))
+        _deletedBuiltInDirectories = State(initialValue: Set(c.deletedBuiltInDirectories ?? []))
     }
 
     var body: some View {
@@ -68,8 +78,8 @@ struct RulesTab: View {
     @ViewBuilder
     private var categoriesSection: some View {
         Section {
-            // Built-in Kategorien
-            ForEach(CategoryDefinitions.all, id: \.name) { category in
+            // Built-in Kategorien (ohne gelöschte)
+            ForEach(CategoryDefinitions.all.filter { !deletedBuiltInCategories.contains($0.name) }, id: \.name) { category in
                 builtInCategoryRow(category: category)
             }
 
@@ -192,6 +202,19 @@ struct RulesTab: View {
                 Text("\(effectiveKws.count) Keywords")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                Button {
+                    deletedBuiltInCategories.insert(category.name)
+                    disabledBuiltInCategories.remove(category.name)
+                    additionalBuiltInKeywords.removeValue(forKey: category.name)
+                    removedBuiltInKeywords.removeValue(forKey: category.name)
+                    saveCategories()
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                        .font(.caption)
+                }
+                .buttonStyle(.plain)
             }
         }
     }
@@ -390,7 +413,7 @@ struct RulesTab: View {
 
         // Präfixe
         Section {
-            ForEach(FileFilters.builtInExcludedPrefixes, id: \.self) { prefix in
+            ForEach(FileFilters.builtInExcludedPrefixes.filter { !deletedBuiltInPrefixes.contains($0) }, id: \.self) { prefix in
                 let isActive = !disabledBuiltInPrefixes.contains(prefix)
                 HStack {
                     Toggle("", isOn: Binding(
@@ -407,6 +430,19 @@ struct RulesTab: View {
                     Text(prefix)
                         .font(.system(.body, design: .monospaced))
                         .foregroundStyle(isActive ? .primary : .secondary)
+
+                    Spacer()
+
+                    Button {
+                        deletedBuiltInPrefixes.insert(prefix)
+                        disabledBuiltInPrefixes.remove(prefix)
+                        saveExclusions()
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
 
@@ -452,7 +488,7 @@ struct RulesTab: View {
 
         // Ordner
         Section {
-            ForEach(Array(FileFilters.builtInExcludedDirectories).sorted(), id: \.self) { dir in
+            ForEach(Array(FileFilters.builtInExcludedDirectories).sorted().filter { !deletedBuiltInDirectories.contains($0) }, id: \.self) { dir in
                 let isActive = !disabledBuiltInDirectories.contains(dir)
                 HStack {
                     Toggle("", isOn: Binding(
@@ -471,6 +507,19 @@ struct RulesTab: View {
                     Text(dir)
                         .font(.system(.body, design: .monospaced))
                         .foregroundStyle(isActive ? .primary : .secondary)
+
+                    Spacer()
+
+                    Button {
+                        deletedBuiltInDirectories.insert(dir)
+                        disabledBuiltInDirectories.remove(dir)
+                        saveExclusions()
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
 
@@ -535,29 +584,66 @@ struct RulesTab: View {
 
     @ViewBuilder
     private func extensionGroup(title: String, extensions: [String]) -> some View {
-        let enabledCount = extensions.filter { enabledBuiltInExtensions.contains($0) }.count
+        let visible = extensions.filter { !deletedBuiltInExtensions.contains($0) }
+        let enabledCount = visible.filter { enabledBuiltInExtensions.contains($0) }.count
         let allExcluded = enabledCount == 0
 
-        DisclosureGroup(
-            isExpanded: Binding(
-                get: { expandedExtGroups.contains(title) },
-                set: { newValue in
-                    if newValue { expandedExtGroups.insert(title) }
-                    else { expandedExtGroups.remove(title) }
+        if !visible.isEmpty {
+            DisclosureGroup(
+                isExpanded: Binding(
+                    get: { expandedExtGroups.contains(title) },
+                    set: { newValue in
+                        if newValue { expandedExtGroups.insert(title) }
+                        else { expandedExtGroups.remove(title) }
+                    }
+                )
+            ) {
+                // Einzelne Extensions
+                ForEach(visible, id: \.self) { ext in
+                    let isExcluded = !enabledBuiltInExtensions.contains(ext)
+                    HStack {
+                        Toggle("", isOn: Binding(
+                            get: { isExcluded },
+                            set: { shouldExclude in
+                                if shouldExclude {
+                                    enabledBuiltInExtensions.remove(ext)
+                                } else {
+                                    enabledBuiltInExtensions.insert(ext)
+                                }
+                                saveExclusions()
+                            }
+                        ))
+                        .toggleStyle(.checkbox)
+                        .labelsHidden()
+
+                        Text(ext)
+                            .font(.system(.body, design: .monospaced))
+                            .foregroundStyle(isExcluded ? .primary : .secondary)
+
+                        Spacer()
+
+                        Button {
+                            deletedBuiltInExtensions.insert(ext)
+                            enabledBuiltInExtensions.remove(ext)
+                            saveExclusions()
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.red)
+                                .font(.caption)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.leading, 8)
                 }
-            )
-        ) {
-            // Einzelne Extensions
-            ForEach(extensions, id: \.self) { ext in
-                let isExcluded = !enabledBuiltInExtensions.contains(ext)
+            } label: {
                 HStack {
                     Toggle("", isOn: Binding(
-                        get: { isExcluded },
+                        get: { allExcluded },
                         set: { shouldExclude in
                             if shouldExclude {
-                                enabledBuiltInExtensions.remove(ext)
+                                for ext in visible { enabledBuiltInExtensions.remove(ext) }
                             } else {
-                                enabledBuiltInExtensions.insert(ext)
+                                for ext in visible { enabledBuiltInExtensions.insert(ext) }
                             }
                             saveExclusions()
                         }
@@ -565,41 +651,31 @@ struct RulesTab: View {
                     .toggleStyle(.checkbox)
                     .labelsHidden()
 
-                    Text(ext)
-                        .font(.system(.body, design: .monospaced))
-                        .foregroundStyle(isExcluded ? .primary : .secondary)
-                }
-                .padding(.leading, 8)
-            }
-        } label: {
-            HStack {
-                Toggle("", isOn: Binding(
-                    get: { allExcluded },
-                    set: { shouldExclude in
-                        if shouldExclude {
-                            for ext in extensions { enabledBuiltInExtensions.remove(ext) }
-                        } else {
-                            for ext in extensions { enabledBuiltInExtensions.insert(ext) }
-                        }
-                        saveExclusions()
+                    Text(title)
+                        .foregroundStyle(allExcluded ? .primary : .secondary)
+
+                    Spacer()
+
+                    if enabledCount > 0 {
+                        Text("\(enabledCount) aktiviert")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    } else {
+                        Text("\(visible.count) ausgeschlossen")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                ))
-                .toggleStyle(.checkbox)
-                .labelsHidden()
 
-                Text(title)
-                    .foregroundStyle(allExcluded ? .primary : .secondary)
-
-                Spacer()
-
-                if enabledCount > 0 {
-                    Text("\(enabledCount) aktiviert")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
-                } else {
-                    Text("\(extensions.count) ausgeschlossen")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Button {
+                        for ext in visible { deletedBuiltInExtensions.insert(ext) }
+                        for ext in visible { enabledBuiltInExtensions.remove(ext) }
+                        saveExclusions()
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -738,12 +814,16 @@ struct RulesTab: View {
         disabledBuiltInCategories = []
         additionalBuiltInKeywords = [:]
         removedBuiltInKeywords = [:]
+        deletedBuiltInCategories = []
         customExcludedExtensions = []
         customExcludedPrefixes = []
         customExcludedDirectories = []
         enabledBuiltInExtensions = []
         disabledBuiltInPrefixes = []
         disabledBuiltInDirectories = []
+        deletedBuiltInExtensions = []
+        deletedBuiltInPrefixes = []
+        deletedBuiltInDirectories = []
         newKeywordText = [:]
         newBuiltInKeywordText = [:]
         saveCategories()
@@ -758,6 +838,7 @@ struct RulesTab: View {
             cfg.disabledBuiltInCategories = disabledBuiltInCategories.isEmpty ? nil : Array(disabledBuiltInCategories)
             cfg.additionalBuiltInKeywords = additionalBuiltInKeywords.isEmpty ? nil : additionalBuiltInKeywords
             cfg.removedBuiltInKeywords = removedBuiltInKeywords.isEmpty ? nil : removedBuiltInKeywords
+            cfg.deletedBuiltInCategories = deletedBuiltInCategories.isEmpty ? nil : Array(deletedBuiltInCategories)
         }
     }
 
@@ -769,6 +850,9 @@ struct RulesTab: View {
             cfg.enabledBuiltInExtensions = enabledBuiltInExtensions.isEmpty ? nil : Array(enabledBuiltInExtensions)
             cfg.disabledBuiltInPrefixes = disabledBuiltInPrefixes.isEmpty ? nil : Array(disabledBuiltInPrefixes)
             cfg.disabledBuiltInDirectories = disabledBuiltInDirectories.isEmpty ? nil : Array(disabledBuiltInDirectories)
+            cfg.deletedBuiltInExtensions = deletedBuiltInExtensions.isEmpty ? nil : Array(deletedBuiltInExtensions)
+            cfg.deletedBuiltInPrefixes = deletedBuiltInPrefixes.isEmpty ? nil : Array(deletedBuiltInPrefixes)
+            cfg.deletedBuiltInDirectories = deletedBuiltInDirectories.isEmpty ? nil : Array(deletedBuiltInDirectories)
         }
     }
 }
