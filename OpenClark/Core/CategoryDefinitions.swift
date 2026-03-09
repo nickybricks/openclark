@@ -61,7 +61,7 @@ enum CategoryDefinitions {
         ]),
     ]
 
-    /// Keywords als Dictionary (für schnellen Zugriff).
+    /// Keywords als Dictionary (für schnellen Zugriff) – nur Built-in.
     static let keywordsMap: [String: [String]] = {
         var map: [String: [String]] = [:]
         for cat in all {
@@ -72,4 +72,60 @@ enum CategoryDefinitions {
 
     /// Fallback-Kategorie wenn nichts passt.
     static let fallbackCategory = "Dokument"
+
+    // MARK: - Konfigurierbare Kategorien
+
+    /// Built-in Kategorie-Namen (für UI-Unterscheidung).
+    static let builtInCategoryNames: Set<String> = {
+        Set(all.map(\.name))
+    }()
+
+    /// Effektive Kategorien unter Berücksichtigung der Konfiguration.
+    /// - Built-in minus deaktivierte
+    /// - Plus benutzerdefinierte
+    static func effectiveCategories(config: AppConfiguration? = nil) -> [Category] {
+        let cfg = config ?? AppConfig.shared.config
+        let disabled = Set(cfg.disabledBuiltInCategories ?? [])
+
+        // Built-in Kategorien filtern + Keyword-Overrides anwenden
+        let added = cfg.additionalBuiltInKeywords ?? [:]
+        let removed = cfg.removedBuiltInKeywords ?? [:]
+
+        var result: [Category] = []
+        for cat in all {
+            guard !disabled.contains(cat.name) else { continue }
+            var keywords = cat.keywords
+
+            // Entfernte Keywords rausfiltern
+            if let removedKws = removed[cat.name] {
+                keywords = keywords.filter { !removedKws.contains($0) }
+            }
+            // Zusätzliche Keywords hinzufügen
+            if let addedKws = added[cat.name] {
+                for kw in addedKws where !keywords.contains(kw) {
+                    keywords.append(kw)
+                }
+            }
+
+            result.append(Category(name: cat.name, keywords: keywords))
+        }
+
+        // Benutzerdefinierte Kategorien hinzufügen
+        if let custom = cfg.customCategories {
+            for c in custom {
+                result.append(Category(name: c.name, keywords: c.keywords))
+            }
+        }
+
+        return result
+    }
+
+    /// Effektive Keywords-Map unter Berücksichtigung der Konfiguration.
+    static func effectiveKeywordsMap(config: AppConfiguration? = nil) -> [String: [String]] {
+        var map: [String: [String]] = [:]
+        for cat in effectiveCategories(config: config) {
+            map[cat.name] = cat.keywords
+        }
+        return map
+    }
 }

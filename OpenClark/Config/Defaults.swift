@@ -36,7 +36,15 @@ enum Defaults {
             trialStartDate: nil,
             trialExpired: false,
             onboardingCompleted: false,
-            launchAtLogin: launchAtLogin
+            launchAtLogin: launchAtLogin,
+            customCategories: nil,
+            disabledBuiltInCategories: nil,
+            additionalBuiltInKeywords: nil,
+            removedBuiltInKeywords: nil,
+            excludedExtensions: nil,
+            excludedPrefixes: nil,
+            excludedDirectories: nil,
+            enabledBuiltInExtensions: nil
         )
     }
 }

@@ -59,6 +59,9 @@ struct GeneralTab: View {
                 .pickerStyle(.segmented)
                 .onChange(of: language) { _, newValue in
                     config.update { $0.language = newValue }
+                    // macOS App-Sprache überschreiben (wirksam nach Neustart)
+                    UserDefaults.standard.set([newValue], forKey: "AppleLanguages")
+                    UserDefaults.standard.synchronize()
                 }
 
                 Text("Änderungen an der Sprache werden nach Neustart wirksam.")

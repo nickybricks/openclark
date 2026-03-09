@@ -91,21 +91,6 @@ struct FoldersTab: View {
                 Label("Optionen", systemImage: "gearshape")
             }
 
-            // Ausschlüsse (nur Info)
-            Section {
-                Text("Ignorierte Ordner: .Trash, node_modules, .git, __pycache__, .venv")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text("Ignorierte Dateien: Bilder, Musik, Video, Design, Systemdateien")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text("Ignorierte Präfixe: IMG_, Screenshot, Bildschirmfoto, .")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            } header: {
-                Label("Ausschlüsse", systemImage: "eye.slash")
-            }
-
             // Aktion
             Section {
                 Button {

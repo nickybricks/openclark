@@ -1070,6 +1070,246 @@
           }
         }
       }
+    },
+    "Regeln" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rules"
+          }
+        }
+      }
+    },
+    "Kategorien" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories"
+          }
+        }
+      }
+    },
+    "Kategorien bestimmen, wie Dateien klassifiziert werden. Deaktivierte Kategorien werden bei der Erkennung ignoriert." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories determine how files are classified. Disabled categories are ignored during detection."
+          }
+        }
+      }
+    },
+    "Kategorie hinzufügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add category"
+          }
+        }
+      }
+    },
+    "Neue Kategorie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New category"
+          }
+        }
+      }
+    },
+    "Name (z.B. Protokoll)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name (e.g. Protocol)"
+          }
+        }
+      }
+    },
+    "Keywords (kommagetrennt)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keywords (comma-separated)"
+          }
+        }
+      }
+    },
+    "z.B. protokoll, minutes, meeting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. protocol, minutes, meeting"
+          }
+        }
+      }
+    },
+    "Hinzufügen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "%lld Keywords" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld keywords"
+          }
+        }
+      }
+    },
+    "Ausgeschlossene Dateiendungen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluded file extensions"
+          }
+        }
+      }
+    },
+    "Ausgeschlossene Präfixe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluded prefixes"
+          }
+        }
+      }
+    },
+    "Ausgeschlossene Ordner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluded folders"
+          }
+        }
+      }
+    },
+    "Built-in" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in"
+          }
+        }
+      }
+    },
+    "Bilder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images"
+          }
+        }
+      }
+    },
+    "Musik" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music"
+          }
+        }
+      }
+    },
+    "Video" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        }
+      }
+    },
+    "Design" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Design"
+          }
+        }
+      }
+    },
+    "System" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        }
+      }
+    },
+    "z.B. .numbers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. .numbers"
+          }
+        }
+      }
+    },
+    "z.B. SCAN_" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. SCAN_"
+          }
+        }
+      }
+    },
+    "z.B. backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. backup"
+          }
+        }
+      }
+    },
+    "Alle Anpassungen zurücksetzen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset all customizations"
+          }
+        }
+      }
+    },
+    "Entfernt alle benutzerdefinierten Kategorien und Ausschlüsse und stellt die Standardwerte wieder her." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removes all custom categories and exclusions and restores defaults."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

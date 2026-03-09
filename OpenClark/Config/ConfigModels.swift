@@ -1,5 +1,18 @@
 import Foundation
 
+/// Benutzerdefinierte Kategorie mit Keywords.
+struct CustomCategory: Codable, Sendable, Identifiable, Equatable {
+    var id: UUID
+    var name: String
+    var keywords: [String]
+
+    init(id: UUID = UUID(), name: String, keywords: [String]) {
+        self.id = id
+        self.name = name
+        self.keywords = keywords
+    }
+}
+
 /// Hauptkonfiguration der App.
 struct AppConfiguration: Codable, Sendable {
     var watchedDirectories: [String]
@@ -24,6 +37,20 @@ struct AppConfiguration: Codable, Sendable {
 
     // Launch at Login
     var launchAtLogin: Bool
+
+    // Kategorien
+    var customCategories: [CustomCategory]?
+    var disabledBuiltInCategories: [String]?
+    // Keyword-Overrides für Built-in Kategorien
+    var additionalBuiltInKeywords: [String: [String]]?  // Kategoriename → zusätzliche Keywords
+    var removedBuiltInKeywords: [String: [String]]?      // Kategoriename → entfernte Keywords
+
+    // Ausschlüsse (benutzerdefiniert, zusätzlich zu Built-in)
+    var excludedExtensions: [String]?
+    var excludedPrefixes: [String]?
+    var excludedDirectories: [String]?
+    // Built-in Ausschlüsse die der User wieder aktiviert hat
+    var enabledBuiltInExtensions: [String]?
 
     enum LLMProviderType: String, Codable, Sendable, CaseIterable {
         case anthropic

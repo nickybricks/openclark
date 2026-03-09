@@ -185,7 +185,7 @@ enum OpenClarkCLI {
 
     static func processFolder(_ path: String, dryRun: Bool, recursive: Bool, verbose: Bool) {
         let fm = FileManager.default
-        let excludedDirs = FileFilters.excludedDirectories
+        let excludedDirs = FileFilters.effectiveExcludedDirectories()
 
         guard let enumerator = fm.enumerator(
             at: URL(fileURLWithPath: path),

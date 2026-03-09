@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Natives macOS Settings-Fenster mit 4 Tabs.
+/// Natives macOS Settings-Fenster mit 5 Tabs.
 struct SettingsView: View {
     @ObservedObject var processor: FileProcessor
     let database: DatabaseManager
@@ -15,6 +15,11 @@ struct SettingsView: View {
             FoldersTab(processor: processor)
                 .tabItem {
                     Label("Ordner", systemImage: "folder")
+                }
+
+            RulesTab()
+                .tabItem {
+                    Label("Regeln", systemImage: "list.bullet.rectangle")
                 }
 
             AITab()

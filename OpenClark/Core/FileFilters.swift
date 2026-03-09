@@ -3,9 +3,9 @@ import Foundation
 /// Bestimmt welche Dateien übersprungen werden sollen.
 enum FileFilters {
 
-    // MARK: - Ignorierte Dateiendungen
+    // MARK: - Built-in Ignorierte Dateiendungen
 
-    static let excludedExtensions: Set<String> = [
+    static let builtInExcludedExtensions: Set<String> = [
         // Bilder
         ".jpg", ".jpeg", ".png", ".gif", ".heic", ".heif", ".raw",
         ".cr2", ".cr3", ".nef", ".arw", ".tiff", ".tif", ".bmp",
@@ -20,18 +20,68 @@ enum FileFilters {
         ".ds_store", ".tmp", ".crdownload", ".part",
     ]
 
-    // MARK: - Ignorierte Dateinamen-Präfixe
+    // MARK: - Built-in Ignorierte Dateinamen-Präfixe
 
-    static let excludedPrefixes: [String] = [
+    static let builtInExcludedPrefixes: [String] = [
         "IMG_", "DSC_", "Bildschirmfoto", "Screenshot", "Screen Shot", ".", "~",
     ]
 
-    // MARK: - Ignorierte Ordner
+    // MARK: - Built-in Ignorierte Ordner
 
-    static let excludedDirectories: Set<String> = [
+    static let builtInExcludedDirectories: Set<String> = [
         ".Trash", "node_modules", ".git", "__pycache__", ".venv",
         ".DS_Store", "Library",
     ]
+
+    // MARK: - Effektive Ausschlüsse (Built-in + Config)
+
+    /// Effektive ausgeschlossene Extensions unter Berücksichtigung der Config.
+    static func effectiveExcludedExtensions(config: AppConfiguration? = nil) -> Set<String> {
+        let cfg = config ?? AppConfig.shared.config
+        var result = builtInExcludedExtensions
+
+        // Built-in Ausschlüsse entfernen die der User wieder aktiviert hat
+        if let enabled = cfg.enabledBuiltInExtensions {
+            for ext in enabled {
+                result.remove(ext)
+            }
+        }
+
+        // Benutzerdefinierte Ausschlüsse hinzufügen
+        if let custom = cfg.excludedExtensions {
+            for ext in custom {
+                result.insert(ext)
+            }
+        }
+
+        return result
+    }
+
+    /// Effektive ausgeschlossene Prefixes unter Berücksichtigung der Config.
+    static func effectiveExcludedPrefixes(config: AppConfiguration? = nil) -> [String] {
+        let cfg = config ?? AppConfig.shared.config
+        var result = builtInExcludedPrefixes
+
+        if let custom = cfg.excludedPrefixes {
+            result.append(contentsOf: custom)
+        }
+
+        return result
+    }
+
+    /// Effektive ausgeschlossene Ordner unter Berücksichtigung der Config.
+    static func effectiveExcludedDirectories(config: AppConfiguration? = nil) -> Set<String> {
+        let cfg = config ?? AppConfig.shared.config
+        var result = builtInExcludedDirectories
+
+        if let custom = cfg.excludedDirectories {
+            for dir in custom {
+                result.insert(dir)
+            }
+        }
+
+        return result
+    }
 
     // MARK: - Schema-Pattern
 
@@ -73,7 +123,7 @@ enum FileFilters {
     // MARK: - Hauptfilter
 
     /// Prüfe ob eine Datei übersprungen werden soll.
-    static func shouldSkip(filename: String, filePath: String) -> Bool {
+    static func shouldSkip(filename: String, filePath: String, config: AppConfiguration? = nil) -> Bool {
         // iCloud-Placeholder werden separat behandelt (nicht skippen, sondern Download triggern)
         if isICloudPlaceholder(filename) { return true }
 
@@ -82,21 +132,24 @@ enum FileFilters {
         // Temporäre Dateien
         if filename.hasPrefix("~") || filename.hasSuffix(".tmp") { return true }
 
-        // Dateierweiterung prüfen
+        // Dateierweiterung prüfen (Config-aware)
         let ext = (filename as NSString).pathExtension.lowercased()
-        if !ext.isEmpty && excludedExtensions.contains(".\(ext)") {
+        let excludedExts = effectiveExcludedExtensions(config: config)
+        if !ext.isEmpty && excludedExts.contains(".\(ext)") {
             return true
         }
 
-        // Präfix prüfen
-        for prefix in excludedPrefixes {
+        // Präfix prüfen (Config-aware)
+        let prefixes = effectiveExcludedPrefixes(config: config)
+        for prefix in prefixes {
             if filename.hasPrefix(prefix) { return true }
         }
 
-        // Ordner prüfen
+        // Ordner prüfen (Config-aware)
+        let excludedDirs = effectiveExcludedDirectories(config: config)
         let components = filePath.split(separator: "/").map(String.init)
         for component in components {
-            if excludedDirectories.contains(component) { return true }
+            if excludedDirs.contains(component) { return true }
         }
 
         // Bereits im Schema

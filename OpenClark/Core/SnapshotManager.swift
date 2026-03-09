@@ -9,7 +9,7 @@ enum SnapshotManager {
     /// Erstelle Snapshot aller bestehenden Dateien in überwachten Ordnern.
     static func createSnapshot(directories: [String], database: DatabaseManager, recursive: Bool) {
         let fm = FileManager.default
-        let excludedDirs = FileFilters.excludedDirectories
+        let excludedDirs = FileFilters.effectiveExcludedDirectories()
 
         for dir in directories {
             let expandedDir = (dir as NSString).expandingTildeInPath

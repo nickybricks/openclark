@@ -108,7 +108,7 @@ final class FileWatcher: @unchecked Sendable {
 
     private func pollDirectory(_ path: String, recursive: Bool) {
         let fm = FileManager.default
-        let excludedDirs = FileFilters.excludedDirectories
+        let excludedDirs = FileFilters.effectiveExcludedDirectories()
 
         guard let enumerator = fm.enumerator(
             at: URL(fileURLWithPath: path),

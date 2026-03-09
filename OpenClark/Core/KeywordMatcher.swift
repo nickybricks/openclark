@@ -12,7 +12,7 @@ enum KeywordMatcher {
     /// Erkenne Kategorie aus beliebigem Text (Dateiname oder PDF-Inhalt).
     /// Gibt (Kategorie, Konfidenz 0.0-1.0) zurück.
     static func detectCategory(from text: String, keywords: [String: [String]]? = nil) -> (category: String?, confidence: Double) {
-        let keywordsMap = keywords ?? CategoryDefinitions.keywordsMap
+        let keywordsMap = keywords ?? CategoryDefinitions.effectiveKeywordsMap()
         let textLower = text.lowercased()
         let textNormalized = TextSanitizer.replaceUmlauts(textLower)
 
@@ -55,7 +55,7 @@ enum KeywordMatcher {
 
     /// Erkenne Kategorie aus Dateinamen und extrahiere Beschreibung.
     static func matchFilename(_ filename: String, keywords: [String: [String]]? = nil) -> MatchResult? {
-        let keywordsMap = keywords ?? CategoryDefinitions.keywordsMap
+        let keywordsMap = keywords ?? CategoryDefinitions.effectiveKeywordsMap()
         let nameLower = filename.lowercased()
         let nameNormalized = TextSanitizer.replaceUmlauts(nameLower)
 
@@ -63,7 +63,7 @@ enum KeywordMatcher {
         var matchedKeyword = ""
 
         // Finde längsten matchenden Keyword (spezifischste Kategorie)
-        for category in CategoryDefinitions.all {
+        for category in CategoryDefinitions.effectiveCategories() {
             for keyword in category.keywords {
                 let kwLower = keyword.lowercased()
                 if nameLower.contains(kwLower) || nameNormalized.contains(kwLower) {
