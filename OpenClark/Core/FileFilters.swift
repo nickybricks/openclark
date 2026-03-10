@@ -159,6 +159,17 @@ enum FileFilters {
             if excludedDirs.contains(component) { return true }
         }
 
+        // Benutzerdefinierte Ordner als volle Pfade prüfen
+        let cfg = config ?? AppConfig.shared.config
+        if let customDirs = cfg.excludedDirectories {
+            for dir in customDirs where dir.hasPrefix("/") {
+                let dirWithSlash = dir.hasSuffix("/") ? dir : dir + "/"
+                if filePath.hasPrefix(dirWithSlash) || filePath == dir {
+                    return true
+                }
+            }
+        }
+
         // Bereits im Schema
         if matchesSchema(filename) { return true }
 

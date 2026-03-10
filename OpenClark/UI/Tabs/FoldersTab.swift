@@ -7,6 +7,11 @@ struct FoldersTab: View {
     @State private var processingDelay: Int
     @State private var pollInterval: Int
 
+    // Ausgeschlossene Ordner
+    @State private var customExcludedDirectories: [String]
+    @State private var disabledBuiltInDirectories: Set<String>
+    @State private var deletedBuiltInDirectories: Set<String>
+
     @ObservedObject var processor: FileProcessor
 
     private let config = AppConfig.shared
@@ -18,6 +23,9 @@ struct FoldersTab: View {
         _recursive = State(initialValue: c.recursive)
         _processingDelay = State(initialValue: c.processingDelay)
         _pollInterval = State(initialValue: c.pollInterval)
+        _customExcludedDirectories = State(initialValue: c.excludedDirectories ?? [])
+        _disabledBuiltInDirectories = State(initialValue: Set(c.disabledBuiltInDirectories ?? []))
+        _deletedBuiltInDirectories = State(initialValue: Set(c.deletedBuiltInDirectories ?? []))
     }
 
     var body: some View {
@@ -60,6 +68,85 @@ struct FoldersTab: View {
                 }
             } header: {
                 Label("Überwachte Ordner", systemImage: "folder.badge.gearshape")
+            }
+
+            // Ausgeschlossene Ordner
+            Section {
+                List {
+                    // Built-in ausgeschlossene Ordner
+                    ForEach(Array(FileFilters.builtInExcludedDirectories).sorted().filter { !deletedBuiltInDirectories.contains($0) }, id: \.self) { dir in
+                        let isActive = !disabledBuiltInDirectories.contains(dir)
+                        HStack {
+                            Toggle("", isOn: Binding(
+                                get: { isActive },
+                                set: { enabled in
+                                    if enabled { disabledBuiltInDirectories.remove(dir) }
+                                    else { disabledBuiltInDirectories.insert(dir) }
+                                    saveExcludedDirectories()
+                                }
+                            ))
+                            .toggleStyle(.checkbox)
+                            .labelsHidden()
+
+                            Image(systemName: "folder.fill")
+                                .foregroundStyle(isActive ? .secondary : .tertiary)
+                            Text(dir)
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundStyle(isActive ? .primary : .secondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer()
+                            Button {
+                                deletedBuiltInDirectories.insert(dir)
+                                disabledBuiltInDirectories.remove(dir)
+                                saveExcludedDirectories()
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundStyle(.red)
+                                    .font(.caption)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    // Benutzerdefinierte ausgeschlossene Ordner
+                    ForEach(Array(customExcludedDirectories.enumerated()), id: \.element) { idx, dir in
+                        HStack {
+                            Image(systemName: "folder.fill")
+                                .foregroundStyle(.green)
+                            Text(abbreviatePath(dir))
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer()
+                            Button {
+                                customExcludedDirectories.remove(at: idx)
+                                saveExcludedDirectories()
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundStyle(.red)
+                            }
+                            .buttonStyle(.borderless)
+                        }
+                    }
+                }
+                .frame(minHeight: 80)
+
+                HStack {
+                    Button {
+                        addExcludedDirectory()
+                    } label: {
+                        Label("Ordner hinzufügen", systemImage: "plus.circle.fill")
+                    }
+
+                    Spacer()
+
+                    let totalCount = FileFilters.builtInExcludedDirectories.filter { !deletedBuiltInDirectories.contains($0) && !disabledBuiltInDirectories.contains($0) }.count + customExcludedDirectories.count
+                    Text("\(totalCount) Ordner")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            } header: {
+                Label("Ausgeschlossene Ordner", systemImage: "folder.badge.minus")
             }
 
             // Optionen
@@ -131,6 +218,30 @@ struct FoldersTab: View {
     private func removeDirectory(_ dir: String) {
         watchedDirectories.removeAll { $0 == dir }
         config.update { $0.watchedDirectories = watchedDirectories }
+    }
+
+    private func addExcludedDirectory() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.message = "Ordner zum Ausschließen auswählen"
+
+        if panel.runModal() == .OK, let url = panel.url {
+            let path = url.path
+            if !customExcludedDirectories.contains(path) {
+                customExcludedDirectories.append(path)
+                saveExcludedDirectories()
+            }
+        }
+    }
+
+    private func saveExcludedDirectories() {
+        config.update { cfg in
+            cfg.excludedDirectories = customExcludedDirectories.isEmpty ? nil : customExcludedDirectories
+            cfg.disabledBuiltInDirectories = disabledBuiltInDirectories.isEmpty ? nil : Array(disabledBuiltInDirectories)
+            cfg.deletedBuiltInDirectories = deletedBuiltInDirectories.isEmpty ? nil : Array(deletedBuiltInDirectories)
+        }
     }
 
     private func processExistingFiles() {

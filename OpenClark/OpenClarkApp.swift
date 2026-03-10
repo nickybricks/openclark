@@ -4,12 +4,18 @@ import os.log
 @main
 struct OpenClarkApp: App {
     @StateObject private var processor: FileProcessor
+    @StateObject private var languageManager = LanguageManager.shared
     @State private var showOnboarding: Bool
 
     private let database: DatabaseManager
     private let logger = Logger(subsystem: "com.openclark", category: "app")
 
     init() {
+        // Sprache aus Config setzen BEVOR UI geladen wird
+        let savedLang = AppConfig.shared.config.language
+        UserDefaults.standard.set([savedLang], forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
+
         // Datenbank initialisieren
         let db: DatabaseManager
         do {
@@ -36,6 +42,8 @@ struct OpenClarkApp: App {
         // Menubar
         MenuBarExtra {
             MenuBarView(processor: processor)
+                .id(languageManager.refreshID)
+                .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
         } label: {
             Image(systemName: "doc.text.magnifyingglass")
                 .symbolRenderingMode(.hierarchical)
@@ -43,16 +51,25 @@ struct OpenClarkApp: App {
 
         // Settings-Fenster
         Window("OpenClark Einstellungen", id: "settings") {
-            SettingsView(processor: processor, database: database)
-                .onAppear {
-                    // FileProcessor starten falls noch nicht geschehen
-                    if processor.isActive {
-                        processor.start()
+            ZStack {
+                SettingsView(processor: processor, database: database)
+                    .id(languageManager.refreshID)
+                    .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
+                    .onAppear {
+                        // FileProcessor starten falls noch nicht geschehen
+                        if processor.isActive {
+                            processor.start()
+                        }
                     }
+                    .sheet(isPresented: $showOnboarding) {
+                        OnboardingView(isPresented: $showOnboarding)
+                    }
+
+                if languageManager.isTransitioning {
+                    LanguageTransitionOverlay()
+                        .transition(.opacity)
                 }
-                .sheet(isPresented: $showOnboarding) {
-                    OnboardingView(isPresented: $showOnboarding)
-                }
+            }
         }
         .windowResizability(.contentSize)
         .defaultPosition(.center)

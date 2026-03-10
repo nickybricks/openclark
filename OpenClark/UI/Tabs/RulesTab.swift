@@ -6,22 +6,19 @@ struct RulesTab: View {
     @State private var disabledBuiltInCategories: Set<String>
     @State private var customExcludedExtensions: [String]
     @State private var customExcludedPrefixes: [String]
-    @State private var customExcludedDirectories: [String]
     @State private var enabledBuiltInExtensions: Set<String>
 
     // Built-in Keyword-Overrides
     @State private var additionalBuiltInKeywords: [String: [String]]
     @State private var removedBuiltInKeywords: [String: [String]]
 
-    // Deaktivierte Built-in Prefixes/Directories
+    // Deaktivierte Built-in Prefixes
     @State private var disabledBuiltInPrefixes: Set<String>
-    @State private var disabledBuiltInDirectories: Set<String>
 
     // Gelöschte Built-in Einträge
     @State private var deletedBuiltInCategories: Set<String>
     @State private var deletedBuiltInExtensions: Set<String>
     @State private var deletedBuiltInPrefixes: Set<String>
-    @State private var deletedBuiltInDirectories: Set<String>
 
     // Neue Kategorie
     @State private var showAddCategory = false
@@ -35,7 +32,6 @@ struct RulesTab: View {
     // Neue Ausschlüsse
     @State private var newExtension = ""
     @State private var newPrefix = ""
-    @State private var newDirectory = ""
 
     // Expanded Disclosure Groups
     @State private var expandedCategories: Set<String> = []
@@ -49,16 +45,13 @@ struct RulesTab: View {
         _disabledBuiltInCategories = State(initialValue: Set(c.disabledBuiltInCategories ?? []))
         _customExcludedExtensions = State(initialValue: c.excludedExtensions ?? [])
         _customExcludedPrefixes = State(initialValue: c.excludedPrefixes ?? [])
-        _customExcludedDirectories = State(initialValue: c.excludedDirectories ?? [])
         _enabledBuiltInExtensions = State(initialValue: Set(c.enabledBuiltInExtensions ?? []))
         _additionalBuiltInKeywords = State(initialValue: c.additionalBuiltInKeywords ?? [:])
         _removedBuiltInKeywords = State(initialValue: c.removedBuiltInKeywords ?? [:])
         _disabledBuiltInPrefixes = State(initialValue: Set(c.disabledBuiltInPrefixes ?? []))
-        _disabledBuiltInDirectories = State(initialValue: Set(c.disabledBuiltInDirectories ?? []))
         _deletedBuiltInCategories = State(initialValue: Set(c.deletedBuiltInCategories ?? []))
         _deletedBuiltInExtensions = State(initialValue: Set(c.deletedBuiltInExtensions ?? []))
         _deletedBuiltInPrefixes = State(initialValue: Set(c.deletedBuiltInPrefixes ?? []))
-        _deletedBuiltInDirectories = State(initialValue: Set(c.deletedBuiltInDirectories ?? []))
     }
 
     var body: some View {
@@ -486,81 +479,6 @@ struct RulesTab: View {
             Label("Ausgeschlossene Präfixe", systemImage: "textformat")
         }
 
-        // Ordner
-        Section {
-            ForEach(Array(FileFilters.builtInExcludedDirectories).sorted().filter { !deletedBuiltInDirectories.contains($0) }, id: \.self) { dir in
-                let isActive = !disabledBuiltInDirectories.contains(dir)
-                HStack {
-                    Toggle("", isOn: Binding(
-                        get: { isActive },
-                        set: { enabled in
-                            if enabled { disabledBuiltInDirectories.remove(dir) }
-                            else { disabledBuiltInDirectories.insert(dir) }
-                            saveExclusions()
-                        }
-                    ))
-                    .toggleStyle(.checkbox)
-                    .labelsHidden()
-
-                    Image(systemName: "folder.fill")
-                        .foregroundStyle(isActive ? .secondary : .tertiary)
-                    Text(dir)
-                        .font(.system(.body, design: .monospaced))
-                        .foregroundStyle(isActive ? .primary : .secondary)
-
-                    Spacer()
-
-                    Button {
-                        deletedBuiltInDirectories.insert(dir)
-                        disabledBuiltInDirectories.remove(dir)
-                        saveExclusions()
-                    } label: {
-                        Image(systemName: "trash")
-                            .foregroundStyle(.red)
-                            .font(.caption)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-
-            if !customExcludedDirectories.isEmpty {
-                Divider()
-                ForEach(Array(customExcludedDirectories.enumerated()), id: \.element) { idx, dir in
-                    HStack {
-                        Image(systemName: "folder.fill")
-                            .foregroundStyle(.green)
-                        Text(dir)
-                            .font(.system(.body, design: .monospaced))
-                        Spacer()
-                        Button {
-                            customExcludedDirectories.remove(at: idx)
-                            saveExclusions()
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.red)
-                                .font(.caption)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-
-            HStack {
-                TextField("z.B. backup", text: $newDirectory)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(maxWidth: 150)
-                    .onSubmit { addCustomDirectory() }
-                Button {
-                    addCustomDirectory()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                }
-                .buttonStyle(.plain)
-                .disabled(newDirectory.isEmpty)
-            }
-        } header: {
-            Label("Ausgeschlossene Ordner", systemImage: "folder.badge.minus")
-        }
     }
 
     // MARK: - Zurücksetzen
@@ -800,15 +718,6 @@ struct RulesTab: View {
         newPrefix = ""
     }
 
-    private func addCustomDirectory() {
-        let dir = newDirectory.trimmingCharacters(in: .whitespaces)
-        if !dir.isEmpty, !customExcludedDirectories.contains(dir) {
-            customExcludedDirectories.append(dir)
-            saveExclusions()
-        }
-        newDirectory = ""
-    }
-
     private func resetAll() {
         customCategories = []
         disabledBuiltInCategories = []
@@ -817,13 +726,10 @@ struct RulesTab: View {
         deletedBuiltInCategories = []
         customExcludedExtensions = []
         customExcludedPrefixes = []
-        customExcludedDirectories = []
         enabledBuiltInExtensions = []
         disabledBuiltInPrefixes = []
-        disabledBuiltInDirectories = []
         deletedBuiltInExtensions = []
         deletedBuiltInPrefixes = []
-        deletedBuiltInDirectories = []
         newKeywordText = [:]
         newBuiltInKeywordText = [:]
         saveCategories()
@@ -846,13 +752,10 @@ struct RulesTab: View {
         config.update { cfg in
             cfg.excludedExtensions = customExcludedExtensions.isEmpty ? nil : customExcludedExtensions
             cfg.excludedPrefixes = customExcludedPrefixes.isEmpty ? nil : customExcludedPrefixes
-            cfg.excludedDirectories = customExcludedDirectories.isEmpty ? nil : customExcludedDirectories
             cfg.enabledBuiltInExtensions = enabledBuiltInExtensions.isEmpty ? nil : Array(enabledBuiltInExtensions)
             cfg.disabledBuiltInPrefixes = disabledBuiltInPrefixes.isEmpty ? nil : Array(disabledBuiltInPrefixes)
-            cfg.disabledBuiltInDirectories = disabledBuiltInDirectories.isEmpty ? nil : Array(disabledBuiltInDirectories)
             cfg.deletedBuiltInExtensions = deletedBuiltInExtensions.isEmpty ? nil : Array(deletedBuiltInExtensions)
             cfg.deletedBuiltInPrefixes = deletedBuiltInPrefixes.isEmpty ? nil : Array(deletedBuiltInPrefixes)
-            cfg.deletedBuiltInDirectories = deletedBuiltInDirectories.isEmpty ? nil : Array(deletedBuiltInDirectories)
         }
     }
 }

@@ -6,6 +6,7 @@ options:
   xcodeVersion: "16.3"
   minimumXcodeGenVersion: "2.40"
   generateEmptyDirectories: true
+  knownRegions: [de, en, Base]
 
 packages:
   GRDB:
@@ -17,6 +18,7 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
     SWIFT_EMIT_LOC_STRINGS: "YES"
+    DEVELOPMENT_LANGUAGE: de
 
 targets:
   OpenClark:
@@ -29,8 +31,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nickybricks.openclark
         PRODUCT_NAME: OpenClark
-        MARKETING_VERSION: "0.1.0"
-        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "0.2.0"
+        CURRENT_PROJECT_VERSION: "2"
         INFOPLIST_FILE: OpenClark/Info.plist
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Manual
@@ -44,10 +46,11 @@ targets:
         CFBundleName: OpenClark
         CFBundleDisplayName: OpenClark
         CFBundleIdentifier: com.nickybricks.openclark
-        CFBundleVersion: "1"
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "2"
+        CFBundleShortVersionString: "0.2.0"
         CFBundlePackageType: APPL
         CFBundleExecutable: OpenClark
+        CFBundleDevelopmentRegion: de
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true
         NSHighResolutionCapable: true
@@ -69,8 +72,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nickybricks.openclark-cli
         PRODUCT_NAME: openclark
-        MARKETING_VERSION: "0.1.0"
-        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "0.2.0"
+        CURRENT_PROJECT_VERSION: "2"
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Manual
         SWIFT_VERSION: "6.0"

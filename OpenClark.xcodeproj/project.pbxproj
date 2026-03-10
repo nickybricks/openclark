@@ -18,6 +18,7 @@
 		36382491CC0BE30B1E3A4B80 /* KeywordMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECCA3E1BC45F84801F0DA89 /* KeywordMatcher.swift */; };
 		385D997AD095B320B1C5529B /* RenameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE33DD3E5FCD8B514FCB1119 /* RenameRecord.swift */; };
 		390FA87E2E3533BBA9748F3A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F7B3D07F92250B7A84A083 /* OnboardingView.swift */; };
+		396A3317DEBB08259D0FB5DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 82A5FE5CE6AA80BF3668C9DF /* InfoPlist.strings */; };
 		3F9C6C1F9F3505A388C91396 /* SnapshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263519392B6E13962A41DE18 /* SnapshotManager.swift */; };
 		3FF15179018967626FC8BF68 /* ActivityTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D724E3170108B80BCBBEE8D9 /* ActivityTab.swift */; };
 		41F9D028AF94FC71E55AAF6A /* OllamaProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC929762B75EA3645A789D37 /* OllamaProvider.swift */; };
@@ -25,6 +26,7 @@
 		44881DD45D066D21E8E8376E /* ProcessedFileRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B6A18E9B478CF9E9B8811B /* ProcessedFileRecord.swift */; };
 		4823F6C6439A33B6C1A08E1A /* ProcessedFileRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B6A18E9B478CF9E9B8811B /* ProcessedFileRecord.swift */; };
 		50AD4E0970D8FC2805941ABB /* RecentRenameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E9F3605DC7A79FDCAB5ECD /* RecentRenameRow.swift */; };
+		516E1F6EFA0C408049707240 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */; };
 		51D9B58974CC0612AEFC4978 /* StabilityChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117087BE0EAB747D0BE9AEEF /* StabilityChecker.swift */; };
 		5B77778082570F7CFDC72DBB /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 256798D01EA3560804BF000C /* Localizable.xcstrings */; };
 		5E39E9EF1AE6A5B011C6C84E /* TextSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB7B3CEB24C0741E7CD5B0D /* TextSanitizer.swift */; };
@@ -39,6 +41,7 @@
 		6C1EC5A8A7EF750FC18F6498 /* AnthropicProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE457854D40DF829E5D2AD6E /* AnthropicProvider.swift */; };
 		6CC759873E9FC92E6F89232B /* KeywordMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECCA3E1BC45F84801F0DA89 /* KeywordMatcher.swift */; };
 		78C3F2970A463211C905B749 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E08D60725CC89496ADA35 /* Defaults.swift */; };
+		79F8E93242EA6C0025E21F2C /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */; };
 		7DF1142A829551FC159EEE28 /* PDFTextExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81B7DE767F75C139703DB4E /* PDFTextExtractor.swift */; };
 		8033872A942B586F07F4775F /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983ECD6CC0BAACEE986E0C6C /* LLMService.swift */; };
 		81D6BF3532DB7B071B763F4E /* RenameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE33DD3E5FCD8B514FCB1119 /* RenameRecord.swift */; };
@@ -83,6 +86,7 @@
 		256798D01EA3560804BF000C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		263519392B6E13962A41DE18 /* SnapshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotManager.swift; sourceTree = "<group>"; };
 		27D44B05D5E4D4EA012FBE27 /* ConfigModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigModels.swift; sourceTree = "<group>"; };
+		2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		30945288C78721913E7AE269 /* CustomProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProvider.swift; sourceTree = "<group>"; };
 		31ABF06AC75F9D52174B948C /* ExistingFileRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExistingFileRecord.swift; sourceTree = "<group>"; };
 		3B31731D6E07446BF685D435 /* FileFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileFilters.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 		670A0EE8A5E10D65BCD213C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		701E01235CCA5259925E9153 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C954CD10CC77AAA91C697AB /* DateExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtractor.swift; sourceTree = "<group>"; };
+		82A5FE5CE6AA80BF3668C9DF /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8C524C6BAABC5481326A4850 /* CategoryDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDefinitions.swift; sourceTree = "<group>"; };
 		917F20398FCA8136877A1B65 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		927E1853E0CE880975C6AE3F /* NameGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameGenerator.swift; sourceTree = "<group>"; };
@@ -143,6 +148,7 @@
 		0EA69AAF1DE7B01644475269 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
+				82A5FE5CE6AA80BF3668C9DF /* InfoPlist.strings */,
 				256798D01EA3560804BF000C /* Localizable.xcstrings */,
 			);
 			path = Localization;
@@ -195,6 +201,7 @@
 				C86B6C830AFE695EA81B4EDF /* FileProcessor.swift */,
 				DCBC6F61A1D8C862ABB991B3 /* FileWatcher.swift */,
 				BECCA3E1BC45F84801F0DA89 /* KeywordMatcher.swift */,
+				2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */,
 				927E1853E0CE880975C6AE3F /* NameGenerator.swift */,
 				B81B7DE767F75C139703DB4E /* PDFTextExtractor.swift */,
 				263519392B6E13962A41DE18 /* SnapshotManager.swift */,
@@ -350,6 +357,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				de,
 				en,
 			);
 			mainGroup = 840835B6408DA55660D94B5D;
@@ -373,6 +381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A16F0D59C887308B0FC553B /* Assets.xcassets in Resources */,
+				396A3317DEBB08259D0FB5DF /* InfoPlist.strings in Resources */,
 				5B77778082570F7CFDC72DBB /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,6 +413,7 @@
 				6BC16C9614A548C7277CA3E9 /* LLMPrompt.swift in Sources */,
 				AC17402CF788F50FE1658C65 /* LLMResponseParser.swift in Sources */,
 				8033872A942B586F07F4775F /* LLMService.swift in Sources */,
+				79F8E93242EA6C0025E21F2C /* LanguageManager.swift in Sources */,
 				B72E7356FF71EB626D735856 /* MenuBarView.swift in Sources */,
 				9BB5EEBD8E1790CA3C960328 /* NameGenerator.swift in Sources */,
 				F24BC54D731CF9452200D186 /* OllamaProvider.swift in Sources */,
@@ -442,6 +452,7 @@
 				43AD6ADC639FDC218D1B62F8 /* LLMPrompt.swift in Sources */,
 				A68294A6A8AA4FA098094968 /* LLMResponseParser.swift in Sources */,
 				02AFCCE9A1560242F0829289 /* LLMService.swift in Sources */,
+				516E1F6EFA0C408049707240 /* LanguageManager.swift in Sources */,
 				287BECF77FFDA5B476B03137 /* NameGenerator.swift in Sources */,
 				41F9D028AF94FC71E55AAF6A /* OllamaProvider.swift in Sources */,
 				8C82B7B6AD508CFE580D84E0 /* OpenAIProvider.swift in Sources */,
@@ -493,6 +504,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_LANGUAGE = de;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -522,14 +534,14 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenClark/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickybricks.openclark;
 				PRODUCT_NAME = OpenClark;
 				SDKROOT = macosx;
@@ -542,12 +554,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nickybricks.openclark-cli";
 				PRODUCT_NAME = openclark;
 				SDKROOT = macosx;
@@ -590,6 +602,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_LANGUAGE = de;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -626,14 +639,14 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenClark/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickybricks.openclark;
 				PRODUCT_NAME = OpenClark;
 				SDKROOT = macosx;
@@ -646,12 +659,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nickybricks.openclark-cli";
 				PRODUCT_NAME = openclark;
 				SDKROOT = macosx;
