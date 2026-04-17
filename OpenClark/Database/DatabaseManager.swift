@@ -68,6 +68,12 @@ final class DatabaseManager: Sendable {
             }
         }
 
+        // v3: Indexes für performante Abfragen
+        migrator.registerMigration("v3_indexes") { db in
+            try db.create(index: "idx_renames_undone_renamedAt", on: "renames", columns: ["undone", "renamedAt"])
+            try db.create(index: "idx_renames_renamedAt", on: "renames", columns: ["renamedAt"])
+        }
+
         try migrator.migrate(dbQueue)
     }
 
@@ -80,8 +86,8 @@ final class DatabaseManager: Sendable {
         }
     }
 
-    func recentRenames(limit: Int = 5) throws -> [RenameRecord] {
-        try dbQueue.read { db in
+    func recentRenames(limit: Int = 5) async throws -> [RenameRecord] {
+        try await dbQueue.read { db in
             try RenameRecord
                 .filter(Column("undone") == false)
                 .order(Column("renamedAt").desc)
@@ -90,8 +96,8 @@ final class DatabaseManager: Sendable {
         }
     }
 
-    func todayRenameCount() throws -> Int {
-        try dbQueue.read { db in
+    func todayRenameCount() async throws -> Int {
+        try await dbQueue.read { db in
             let calendar = Calendar.current
             let startOfDay = calendar.startOfDay(for: Date())
             return try RenameRecord
@@ -112,11 +118,29 @@ final class DatabaseManager: Sendable {
         }
     }
 
-    func allRenames() throws -> [RenameRecord] {
+    func redoRename(id: Int64) throws -> RenameRecord? {
+        try dbQueue.write { db in
+            guard var record = try RenameRecord.fetchOne(db, key: id) else {
+                return nil
+            }
+            record.undone = false
+            try record.update(db)
+            return record
+        }
+    }
+
+    func allRenames(limit: Int = 500, offset: Int = 0) throws -> [RenameRecord] {
         try dbQueue.read { db in
             try RenameRecord
                 .order(Column("renamedAt").desc)
+                .limit(limit, offset: offset)
                 .fetchAll(db)
+        }
+    }
+
+    func renameCount() throws -> Int {
+        try dbQueue.read { db in
+            try RenameRecord.fetchCount(db)
         }
     }
 
@@ -127,12 +151,6 @@ final class DatabaseManager: Sendable {
     }
 
     // MARK: - Existing Files (Snapshot)
-
-    func hasSnapshot() throws -> Bool {
-        try dbQueue.read { db in
-            try ExistingFileRecord.fetchCount(db) > 0
-        }
-    }
 
     func snapshotFile(path: String, size: Int64?) throws {
         try dbQueue.write { db in
@@ -150,6 +168,14 @@ final class DatabaseManager: Sendable {
             try ExistingFileRecord
                 .filter(Column("filepath") == path)
                 .fetchCount(db) > 0
+        }
+    }
+
+    func removeExistingFile(_ path: String) throws {
+        try dbQueue.write { db in
+            try ExistingFileRecord
+                .filter(Column("filepath") == path)
+                .deleteAll(db)
         }
     }
 
@@ -173,6 +199,14 @@ final class DatabaseManager: Sendable {
             try ProcessedFileRecord
                 .filter(Column("filepath") == path)
                 .fetchCount(db) > 0
+        }
+    }
+
+    func removeProcessedFile(_ path: String) throws {
+        try dbQueue.write { db in
+            try ProcessedFileRecord
+                .filter(Column("filepath") == path)
+                .deleteAll(db)
         }
     }
 }

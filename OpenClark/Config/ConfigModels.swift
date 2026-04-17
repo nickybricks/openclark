@@ -64,6 +64,7 @@ struct AppConfiguration: Codable, Sendable {
         case anthropic
         case openai
         case ollama
+        case qwen
         case custom
         case none
     }

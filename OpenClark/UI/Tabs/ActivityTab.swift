@@ -4,10 +4,15 @@ import SwiftUI
 struct ActivityTab: View {
     @ObservedObject var processor: FileProcessor
     @State private var allRenames: [RenameRecord] = []
+    @State private var totalCount: Int = 0
     @State private var showClearConfirmation = false
     @State private var filter: ActivityFilter = .all
+    @State private var selectedIDs: Set<Int64?> = []
+    @State private var isDryRun: Bool = AppConfig.shared.config.dryRun
 
     private let database: DatabaseManager
+    private let config = AppConfig.shared
+    private let pageSize = 200
 
     enum ActivityFilter: String, CaseIterable {
         case all = "Alle"
@@ -54,6 +59,23 @@ struct ActivityTab: View {
 
                 // Aktionen
                 HStack(spacing: 8) {
+                    if !selectedIDs.isEmpty {
+                        let revertableCount = selectedIDs.compactMap { $0 }.filter { id in
+                            filteredRenames.first(where: { $0.id == id }).map { !$0.dryRun && !$0.undone } ?? false
+                        }.count
+                        Button("Rückgängig (\(revertableCount))") {
+                            revertSelected()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                        .disabled(revertableCount == 0)
+
+                        Button("Abbrechen") {
+                            selectedIDs = []
+                        }
+                        .buttonStyle(.bordered)
+                    }
+
                     Button {
                         loadHistory()
                     } label: {
@@ -71,6 +93,26 @@ struct ActivityTab: View {
                 }
             }
             .padding()
+
+            // Dry-Run-Banner
+            if isDryRun {
+                HStack(spacing: 8) {
+                    Image(systemName: "eye.fill")
+                        .foregroundStyle(.orange)
+                    Text("Vorschau-Modus aktiv – Dateien werden nicht wirklich umbenannt.")
+                        .font(.caption)
+                    Spacer()
+                    Button("Deaktivieren") {
+                        config.update { $0.dryRun = false }
+                        isDryRun = false
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .background(Color.orange.opacity(0.12))
+            }
 
             // Fehler-Banner
             if let error = processor.lastError {
@@ -113,11 +155,11 @@ struct ActivityTab: View {
                 .padding()
                 Spacer()
             } else {
-                List {
+                List(selection: $selectedIDs) {
                     ForEach(filteredRenames, id: \.id) { record in
                         RecentRenameRow(
                             record: record,
-                            showUndo: !record.dryRun,
+                            showUndo: !record.dryRun && selectedIDs.isEmpty,
                             onUndo: {
                                 if let id = record.id {
                                     processor.undoRename(id: id)
@@ -129,14 +171,34 @@ struct ActivityTab: View {
                                     let path = record.undone ? record.originalPath : record.newPath
                                     NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: "")
                                 }
+                            },
+                            onReprocess: {
+                                processor.redoRename(record: record)
+                                loadHistory()
                             }
                         )
+                    }
+                    if allRenames.count < totalCount {
+                        HStack {
+                            Spacer()
+                            Button("Mehr laden (\(totalCount - allRenames.count) weitere)") {
+                                loadMore()
+                            }
+                            .buttonStyle(.borderless)
+                            .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
                     }
                 }
             }
         }
         .onAppear {
+            isDryRun = config.config.dryRun
             loadHistory()
+        }
+        .onChange(of: filter) {
+            selectedIDs = []
         }
         .alert("History löschen?", isPresented: $showClearConfirmation) {
             Button("Abbrechen", role: .cancel) {}
@@ -170,19 +232,36 @@ struct ActivityTab: View {
 
     private func loadHistory() {
         do {
-            allRenames = try database.allRenames()
+            totalCount = try database.renameCount()
+            allRenames = try database.allRenames(limit: pageSize, offset: 0)
         } catch {
             allRenames = []
+            totalCount = 0
         }
+    }
+
+    private func loadMore() {
+        do {
+            let next = try database.allRenames(limit: pageSize, offset: allRenames.count)
+            allRenames.append(contentsOf: next)
+        } catch {}
+    }
+
+    private func revertSelected() {
+        let ids = selectedIDs.compactMap { $0 }.filter { id in
+            filteredRenames.first(where: { $0.id == id }).map { !$0.dryRun && !$0.undone } ?? false
+        }
+        processor.undoRenames(ids: ids)
+        selectedIDs = []
+        loadHistory()
     }
 
     private func clearHistory() {
         do {
             try database.clearHistory()
             allRenames = []
+            totalCount = 0
             processor.refreshState()
-        } catch {
-            // Fehler ignorieren
-        }
+        } catch {}
     }
 }

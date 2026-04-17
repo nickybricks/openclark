@@ -6,6 +6,7 @@ struct RecentRenameRow: View {
     var showUndo: Bool = false
     var onUndo: (() -> Void)?
     var onReveal: (() -> Void)?
+    var onReprocess: (() -> Void)?
 
     private var formattedDate: String {
         let formatter = DateFormatter()
@@ -77,29 +78,44 @@ struct RecentRenameRow: View {
 
             Spacer()
 
-            // Aktionen (nicht bei Dry-Run oder Undo)
-            if !record.undone && !record.dryRun {
+            // Aktionen
+            if !record.dryRun {
                 HStack(spacing: 4) {
-                    if let onReveal {
-                        Button {
-                            onReveal()
-                        } label: {
-                            Image(systemName: "folder")
-                                .font(.caption)
+                    if record.undone {
+                        if let onReprocess {
+                            Button(action: onReprocess) {
+                                Label("Umbenennen", systemImage: "arrow.clockwise")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.green)
+                            .controlSize(.small)
+                            .help("Erneut umbenennen")
                         }
-                        .buttonStyle(.borderless)
-                        .help("Im Finder anzeigen")
-                    }
+                    } else {
+                        if let onReveal {
+                            Button {
+                                onReveal()
+                            } label: {
+                                Image(systemName: "folder")
+                                    .font(.caption)
+                            }
+                            .buttonStyle(.borderless)
+                            .help("Im Finder anzeigen")
+                        }
 
-                    if showUndo, let onUndo {
-                        Button {
-                            onUndo()
-                        } label: {
-                            Image(systemName: "arrow.uturn.backward")
-                                .font(.caption)
+                        if showUndo, let onUndo {
+                            Button {
+                                onUndo()
+                            } label: {
+                                Image(systemName: "arrow.uturn.backward")
+                                    .font(.caption)
+                            }
+                            .buttonStyle(.borderless)
+                            .foregroundStyle(.red)
+                            .help("Umbenennung rückgängig")
                         }
-                        .buttonStyle(.borderless)
-                        .help("Umbenennung rückgängig")
                     }
                 }
             }

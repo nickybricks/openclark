@@ -32,16 +32,15 @@ final class LanguageManager: ObservableObject {
         UserDefaults.standard.set([newLanguage], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
 
-        // Kurze Verzögerung, dann UI komplett neu aufbauen
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+        // Task statt verschachtelte DispatchQueue (Swift 6 sicher)
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(400))
             self.currentLanguage = newLanguage
             self.refreshID = UUID()
 
-            // Overlay nach kurzem Moment ausblenden
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    self.isTransitioning = false
-                }
+            try? await Task.sleep(for: .milliseconds(300))
+            withAnimation(.easeInOut(duration: 0.25)) {
+                self.isTransitioning = false
             }
         }
     }
@@ -66,5 +65,6 @@ struct LanguageTransitionOverlay: View {
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
         }
         .ignoresSafeArea()
+        .allowsHitTesting(false)
     }
 }

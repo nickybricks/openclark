@@ -117,9 +117,9 @@ final class FileWatcher: @unchecked Sendable {
         ) else { return }
 
         for case let fileURL as URL in enumerator {
-            // Ordner-Ausschlüsse
+            // Ordner-Ausschlüsse (inkl. versteckte Ordner — muss mit SnapshotManager übereinstimmen)
             if let isDir = try? fileURL.resourceValues(forKeys: [.isDirectoryKey]).isDirectory, isDir {
-                if excludedDirs.contains(fileURL.lastPathComponent) {
+                if excludedDirs.contains(fileURL.lastPathComponent) || fileURL.lastPathComponent.hasPrefix(".") {
                     enumerator.skipDescendants()
                 }
                 continue

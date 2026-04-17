@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import PDFKit
 import os.log
@@ -51,5 +52,25 @@ enum PDFTextExtractor {
     /// Prüfe ob eine Datei eine PDF ist.
     static func isPDF(_ path: String) -> Bool {
         URL(fileURLWithPath: path).pathExtension.lowercased() == "pdf"
+    }
+
+    /// Renders the first N pages of a PDF as base64-encoded JPEG strings for vision LLM APIs.
+    static func renderPagesAsBase64JPEG(from path: String, maxPages: Int = 2) -> [String] {
+        guard let doc = PDFDocument(url: URL(fileURLWithPath: path)) else { return [] }
+        var results: [String] = []
+        let count = min(doc.pageCount, maxPages)
+        for i in 0..<count {
+            guard let page = doc.page(at: i) else { continue }
+            let bounds = page.bounds(for: .mediaBox)
+            let scale: CGFloat = 1.5
+            let size = CGSize(width: bounds.width * scale, height: bounds.height * scale)
+            let image = page.thumbnail(of: size, for: .mediaBox)
+            guard let tiff = image.tiffRepresentation,
+                  let rep = NSBitmapImageRep(data: tiff),
+                  let jpeg = rep.representation(using: .jpeg, properties: [.compressionFactor: 0.85])
+            else { continue }
+            results.append(jpeg.base64EncodedString())
+        }
+        return results
     }
 }

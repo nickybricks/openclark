@@ -4,7 +4,6 @@ import os.log
 @main
 struct OpenClarkApp: App {
     @StateObject private var processor: FileProcessor
-    @StateObject private var languageManager = LanguageManager.shared
     @State private var showOnboarding: Bool
 
     private let database: DatabaseManager
@@ -42,8 +41,6 @@ struct OpenClarkApp: App {
         // Menubar
         MenuBarExtra {
             MenuBarView(processor: processor)
-                .id(languageManager.refreshID)
-                .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
         } label: {
             Image(systemName: "doc.text.magnifyingglass")
                 .symbolRenderingMode(.hierarchical)
@@ -51,27 +48,43 @@ struct OpenClarkApp: App {
 
         // Settings-Fenster
         Window("OpenClark Einstellungen", id: "settings") {
-            ZStack {
-                SettingsView(processor: processor, database: database)
-                    .id(languageManager.refreshID)
-                    .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
-                    .onAppear {
-                        // FileProcessor starten falls noch nicht geschehen
-                        if processor.isActive {
-                            processor.start()
-                        }
-                    }
-                    .sheet(isPresented: $showOnboarding) {
-                        OnboardingView(isPresented: $showOnboarding)
-                    }
-
-                if languageManager.isTransitioning {
-                    LanguageTransitionOverlay()
-                        .transition(.opacity)
-                }
-            }
+            LocalizedSettingsWrapper(
+                processor: processor,
+                database: database,
+                showOnboarding: $showOnboarding
+            )
         }
         .windowResizability(.contentSize)
         .defaultPosition(.center)
+    }
+}
+
+/// Wrapper der LanguageManager beobachtet, ohne den App-Body zu invalidieren.
+/// So bleibt MenuBarExtra stabil bei Sprachwechsel.
+private struct LocalizedSettingsWrapper: View {
+    @ObservedObject var processor: FileProcessor
+    let database: DatabaseManager
+    @Binding var showOnboarding: Bool
+    @StateObject private var languageManager = LanguageManager.shared
+
+    var body: some View {
+        ZStack {
+            SettingsView(processor: processor, database: database)
+                .id(languageManager.refreshID)
+                .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
+                .onAppear {
+                    if processor.isActive {
+                        processor.start()
+                    }
+                }
+                .sheet(isPresented: $showOnboarding) {
+                    OnboardingView(isPresented: $showOnboarding)
+                }
+
+            if languageManager.isTransitioning {
+                LanguageTransitionOverlay()
+                    .transition(.opacity)
+            }
+        }
     }
 }

@@ -92,6 +92,7 @@ struct MenuBarView: View {
 
                 Button("Alle anzeigen...") {
                     openWindow(id: "settings")
+                    NSApp.activate(ignoringOtherApps: true)
                 }
             }
 
@@ -100,6 +101,7 @@ struct MenuBarView: View {
             // Einstellungen
             Button("Einstellungen...") {
                 openWindow(id: "settings")
+                NSApp.activate(ignoringOtherApps: true)
             }
             .keyboardShortcut(",")
 
@@ -111,5 +113,6 @@ struct MenuBarView: View {
             }
             .keyboardShortcut("q")
         }
+        .frame(width: 320)
     }
 }

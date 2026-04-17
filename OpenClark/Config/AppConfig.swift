@@ -28,10 +28,27 @@ final class AppConfig: @unchecked Sendable {
         if FileManager.default.fileExists(atPath: configURL.path),
            let data = try? Data(contentsOf: configURL),
            let loaded = try? decoder.decode(AppConfiguration.self, from: data) {
-            config = loaded
+            config = Self.migrate(loaded)
         } else {
             config = Defaults.defaultConfiguration()
         }
+
+        // Migration-Änderungen persistieren
+        save()
+    }
+
+    /// Upgrade bekannter ungültiger Werte (z. B. Model-IDs, die es im Anthropic-API nie gab).
+    private static func migrate(_ config: AppConfiguration) -> AppConfiguration {
+        var c = config
+        let legacyAnthropicModels: [String: String] = [
+            "claude-haiku-4-20250414": "claude-haiku-4-5-20251001",
+            "claude-sonnet-4-20250514": "claude-sonnet-4-6",
+            "claude-opus-4-20250414": "claude-opus-4-5",
+        ]
+        if let replacement = legacyAnthropicModels[c.llmModel] {
+            c.llmModel = replacement
+        }
+        return c
     }
 
     /// Konfiguration speichern.

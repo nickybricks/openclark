@@ -39,6 +39,7 @@
 		6BC16C9614A548C7277CA3E9 /* LLMPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1595CD6A05C71808C51BA089 /* LLMPrompt.swift */; };
 		6BF9560C45CB7EC99A408F2B /* FileFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B31731D6E07446BF685D435 /* FileFilters.swift */; };
 		6C1EC5A8A7EF750FC18F6498 /* AnthropicProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE457854D40DF829E5D2AD6E /* AnthropicProvider.swift */; };
+		6CAC312571DAAB326F8B31D6 /* OllamaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8E89E599FA02209665E5D /* OllamaManager.swift */; };
 		6CC759873E9FC92E6F89232B /* KeywordMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECCA3E1BC45F84801F0DA89 /* KeywordMatcher.swift */; };
 		78C3F2970A463211C905B749 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E08D60725CC89496ADA35 /* Defaults.swift */; };
 		79F8E93242EA6C0025E21F2C /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */; };
@@ -51,13 +52,16 @@
 		92CA1ADCB14CFC7BA337B889 /* AnthropicProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE457854D40DF829E5D2AD6E /* AnthropicProvider.swift */; };
 		9728A1BD1F59317D9D160B18 /* ExistingFileRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ABF06AC75F9D52174B948C /* ExistingFileRecord.swift */; };
 		9768DB86A540954E4FFFA5CC /* ConfigModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D44B05D5E4D4EA012FBE27 /* ConfigModels.swift */; };
+		979665EDB9660F7D4E7B1508 /* QwenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCEBFD6A25A6E9F6BBC9622 /* QwenProvider.swift */; };
 		9BB5EEBD8E1790CA3C960328 /* NameGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E1853E0CE880975C6AE3F /* NameGenerator.swift */; };
 		A68294A6A8AA4FA098094968 /* LLMResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E598C4A556C01B55B20847 /* LLMResponseParser.swift */; };
 		AC17402CF788F50FE1658C65 /* LLMResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E598C4A556C01B55B20847 /* LLMResponseParser.swift */; };
 		B1E6A5528E1A8DEBA32F649A /* TrialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7D64A53108301B768A120F /* TrialService.swift */; };
+		B2403FE9BB59720FF366994E /* QwenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCEBFD6A25A6E9F6BBC9622 /* QwenProvider.swift */; };
 		B72E7356FF71EB626D735856 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917F20398FCA8136877A1B65 /* MenuBarView.swift */; };
 		BF931817E0A7B9C4D9EFC5C4 /* GeneralTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE71434B87D4628A1F6FB589 /* GeneralTab.swift */; };
 		C017DAA9DA0B86236FF2BB1D /* ExistingFileRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ABF06AC75F9D52174B948C /* ExistingFileRecord.swift */; };
+		C10483A97A91C502498DCF54 /* OllamaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8E89E599FA02209665E5D /* OllamaManager.swift */; };
 		C2BA642F70549659D49A3F74 /* OpenClarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36076FBBB12475745D9D2E6 /* OpenClarkApp.swift */; };
 		CD087F67B4A625F25D0F0C72 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95066211025EA82838575F6 /* AppConfig.swift */; };
 		D02D089526A914A5680C1089 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1E08D60725CC89496ADA35 /* Defaults.swift */; };
@@ -81,6 +85,7 @@
 		00B6A18E9B478CF9E9B8811B /* ProcessedFileRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessedFileRecord.swift; sourceTree = "<group>"; };
 		117087BE0EAB747D0BE9AEEF /* StabilityChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StabilityChecker.swift; sourceTree = "<group>"; };
 		1595CD6A05C71808C51BA089 /* LLMPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMPrompt.swift; sourceTree = "<group>"; };
+		1AD8E89E599FA02209665E5D /* OllamaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaManager.swift; sourceTree = "<group>"; };
 		1E1E08D60725CC89496ADA35 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		20F7B3D07F92250B7A84A083 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		256798D01EA3560804BF000C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -123,6 +128,7 @@
 		DCBC6F61A1D8C862ABB991B3 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		E61CDD28BCD309BAB1864766 /* OpenClarkCLI */ = {isa = PBXFileReference; includeInIndex = 0; path = OpenClarkCLI; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE71434B87D4628A1F6FB589 /* GeneralTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTab.swift; sourceTree = "<group>"; };
+		FFCEBFD6A25A6E9F6BBC9622 /* QwenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QwenProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +209,7 @@
 				BECCA3E1BC45F84801F0DA89 /* KeywordMatcher.swift */,
 				2F9D70CA2B2790A4D3CCA3EC /* LanguageManager.swift */,
 				927E1853E0CE880975C6AE3F /* NameGenerator.swift */,
+				1AD8E89E599FA02209665E5D /* OllamaManager.swift */,
 				B81B7DE767F75C139703DB4E /* PDFTextExtractor.swift */,
 				263519392B6E13962A41DE18 /* SnapshotManager.swift */,
 				117087BE0EAB747D0BE9AEEF /* StabilityChecker.swift */,
@@ -271,6 +278,7 @@
 				983ECD6CC0BAACEE986E0C6C /* LLMService.swift */,
 				CC929762B75EA3645A789D37 /* OllamaProvider.swift */,
 				B3393F27CB66F8F4DEEC0088 /* OpenAIProvider.swift */,
+				FFCEBFD6A25A6E9F6BBC9622 /* QwenProvider.swift */,
 				5C7D64A53108301B768A120F /* TrialService.swift */,
 			);
 			path = LLM;
@@ -416,12 +424,14 @@
 				79F8E93242EA6C0025E21F2C /* LanguageManager.swift in Sources */,
 				B72E7356FF71EB626D735856 /* MenuBarView.swift in Sources */,
 				9BB5EEBD8E1790CA3C960328 /* NameGenerator.swift in Sources */,
+				6CAC312571DAAB326F8B31D6 /* OllamaManager.swift in Sources */,
 				F24BC54D731CF9452200D186 /* OllamaProvider.swift in Sources */,
 				390FA87E2E3533BBA9748F3A /* OnboardingView.swift in Sources */,
 				83C0E61EEB0AE7651667A42D /* OpenAIProvider.swift in Sources */,
 				C2BA642F70549659D49A3F74 /* OpenClarkApp.swift in Sources */,
 				DE12884583AE820920821EC9 /* PDFTextExtractor.swift in Sources */,
 				4823F6C6439A33B6C1A08E1A /* ProcessedFileRecord.swift in Sources */,
+				979665EDB9660F7D4E7B1508 /* QwenProvider.swift in Sources */,
 				50AD4E0970D8FC2805941ABB /* RecentRenameRow.swift in Sources */,
 				81D6BF3532DB7B071B763F4E /* RenameRecord.swift in Sources */,
 				F4F5A77A0B514C6045C16709 /* RulesTab.swift in Sources */,
@@ -454,10 +464,12 @@
 				02AFCCE9A1560242F0829289 /* LLMService.swift in Sources */,
 				516E1F6EFA0C408049707240 /* LanguageManager.swift in Sources */,
 				287BECF77FFDA5B476B03137 /* NameGenerator.swift in Sources */,
+				C10483A97A91C502498DCF54 /* OllamaManager.swift in Sources */,
 				41F9D028AF94FC71E55AAF6A /* OllamaProvider.swift in Sources */,
 				8C82B7B6AD508CFE580D84E0 /* OpenAIProvider.swift in Sources */,
 				7DF1142A829551FC159EEE28 /* PDFTextExtractor.swift in Sources */,
 				44881DD45D066D21E8E8376E /* ProcessedFileRecord.swift in Sources */,
+				B2403FE9BB59720FF366994E /* QwenProvider.swift in Sources */,
 				385D997AD095B320B1C5529B /* RenameRecord.swift in Sources */,
 				51D9B58974CC0612AEFC4978 /* StabilityChecker.swift in Sources */,
 				6052440DDFB910ED1150C946 /* TextSanitizer.swift in Sources */,
@@ -541,7 +553,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickybricks.openclark;
 				PRODUCT_NAME = OpenClark;
 				SDKROOT = macosx;
@@ -559,7 +571,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nickybricks.openclark-cli";
 				PRODUCT_NAME = openclark;
 				SDKROOT = macosx;
@@ -646,7 +658,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickybricks.openclark;
 				PRODUCT_NAME = OpenClark;
 				SDKROOT = macosx;
@@ -664,7 +676,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nickybricks.openclark-cli";
 				PRODUCT_NAME = openclark;
 				SDKROOT = macosx;

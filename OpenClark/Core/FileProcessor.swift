@@ -56,26 +56,33 @@ final class FileProcessor: ObservableObject {
     func start() {
         guard isActive else { return }
 
-        // LLM konfigurieren
         Task {
             await llmService.configure(with: config.config)
             await trialService.startTrialIfNeeded()
         }
 
-        // Snapshot beim ersten Start
+        // Snapshot first (off main thread), then start watcher — prevents existing files from being treated as new
+        let database = self.database
+        let directories = config.config.watchedDirectories
+        let recursive = config.config.recursive
         Task {
-            await createSnapshotIfNeeded()
-        }
+            await Task.detached(priority: .utility) {
+                SnapshotManager.createSnapshot(
+                    directories: directories,
+                    database: database,
+                    recursive: recursive
+                )
+            }.value
 
-        // FileWatcher starten
-        fileWatcher = FileWatcher(config: config) { [weak self] path in
-            guard let self else { return }
-            Task { @MainActor in
-                await self.handleNewFile(path)
+            fileWatcher = FileWatcher(config: config) { [weak self] path in
+                guard let self else { return }
+                Task { @MainActor in
+                    await self.handleNewFile(path)
+                }
             }
+            fileWatcher?.start()
+            logger.info("FileProcessor gestartet")
         }
-        fileWatcher?.start()
-        logger.info("FileProcessor gestartet")
     }
 
     func stop() {
@@ -91,24 +98,6 @@ final class FileProcessor: ObservableObject {
             start()
         }
         isActive.toggle()
-    }
-
-    // MARK: - Snapshot
-
-    private func createSnapshotIfNeeded() async {
-        do {
-            let hasSnapshot = try database.hasSnapshot()
-            if !hasSnapshot {
-                logger.info("Erster Start: Erstelle Snapshot...")
-                SnapshotManager.createSnapshot(
-                    directories: config.config.watchedDirectories,
-                    database: database,
-                    recursive: config.config.recursive
-                )
-            }
-        } catch {
-            logger.error("Snapshot-Fehler: \(error.localizedDescription)")
-        }
     }
 
     // MARK: - iCloud Handling
@@ -211,6 +200,13 @@ final class FileProcessor: ObservableObject {
             )
             do {
                 try database.recordRename(record)
+                // Mark the original path as processed so dry-run doesn't re-evaluate it on every poll
+                try database.markProcessed(
+                    path: path,
+                    originalName: filename,
+                    newName: finalName,
+                    category: result.category
+                )
                 refreshState()
             } catch {
                 logger.error("DB-Fehler (Dry-Run): \(error.localizedDescription)")
@@ -327,12 +323,11 @@ final class FileProcessor: ObservableObject {
             if match.confidence >= confidenceThreshold {
                 // Klarer Treffer – aber bei PDFs evtl. LLM für bessere Beschreibung fragen
                 if PDFTextExtractor.isPDF(path), await isLLMAvailable() {
-                    if let pdfText = PDFTextExtractor.extract(from: path) {
-                        let llmResult = await askLLM(filename: filename, ext: ext, text: pdfText)
-                        if let llm = llmResult {
-                            let newName = buildNameFromLLM(llm, path: path, ext: ext)
-                            return AnalysisResult(newName: newName, category: llm.category, source: "llm")
-                        }
+                    let pdfText = PDFTextExtractor.extract(from: path) ?? ""
+                    let llmResult = await askLLM(filename: filename, ext: ext, text: pdfText, pdfPath: path)
+                    if let llm = llmResult {
+                        let newName = buildNameFromLLM(llm, path: path, ext: ext)
+                        return AnalysisResult(newName: newName, category: llm.category, source: "llm")
                     }
                 }
 
@@ -347,12 +342,13 @@ final class FileProcessor: ObservableObject {
         // ── Stufe 2: PDF-Text + Keyword-Matching ──
         if PDFTextExtractor.isPDF(path) {
             logger.info("  Stufe 2: Extrahiere PDF-Text...")
-            if let pdfText = PDFTextExtractor.extract(from: path) {
+            let pdfText = PDFTextExtractor.extract(from: path) ?? ""
+
+            if !pdfText.isEmpty {
                 let (pdfCategory, pdfConfidence) = KeywordMatcher.detectCategory(from: pdfText)
                 logger.info("  Stufe 2 (PDF-Keywords): \(pdfCategory ?? "nil"), Konfidenz=\(String(format: "%.2f", pdfConfidence))")
 
                 if let cat = pdfCategory, pdfConfidence >= confidenceThreshold {
-                    // Guter PDF-Keyword-Treffer
                     let desc = extractDescriptionFromFilename(filename)
                     let newName = NameGenerator.generate(
                         originalPath: path, category: cat, description: desc
@@ -360,23 +356,32 @@ final class FileProcessor: ObservableObject {
                     return AnalysisResult(newName: newName, category: cat, source: "pdf_keywords")
                 }
 
-                // ── Stufe 3a: LLM mit PDF-Text ──
+                // ── Stufe 3a: LLM mit extrahiertem PDF-Text ──
                 if await isLLMAvailable() {
                     logger.info("  Stufe 3: Frage LLM (mit PDF-Text)...")
-                    let llmResult = await askLLM(filename: filename, ext: ext, text: pdfText)
+                    let llmResult = await askLLM(filename: filename, ext: ext, text: pdfText, pdfPath: path)
                     if let llm = llmResult {
                         let newName = buildNameFromLLM(llm, path: path, ext: ext)
                         return AnalysisResult(newName: newName, category: llm.category, source: "llm")
                     }
                 }
 
-                // Fallback auf PDF-Keyword-Ergebnis (auch wenn unter Schwellwert)
-                if let cat = pdfCategory {
+                if let cat = KeywordMatcher.detectCategory(from: pdfText).0 {
                     let desc = extractDescriptionFromFilename(filename)
                     let newName = NameGenerator.generate(
                         originalPath: path, category: cat, description: desc
                     )
                     return AnalysisResult(newName: newName, category: cat, source: "pdf_keywords")
+                }
+            } else {
+                // ── Stufe 3a': Scan-PDF – kein Text-Layer, direkt an LLM ──
+                if await isLLMAvailable() {
+                    logger.info("  Stufe 3: Frage LLM (Scan-PDF, kein Text)...")
+                    let llmResult = await askLLM(filename: filename, ext: ext, text: "", pdfPath: path)
+                    if let llm = llmResult {
+                        let newName = buildNameFromLLM(llm, path: path, ext: ext)
+                        return AnalysisResult(newName: newName, category: llm.category, source: "llm")
+                    }
                 }
             }
         }
@@ -416,12 +421,22 @@ final class FileProcessor: ObservableObject {
         return await trialService.isLLMAvailable()
     }
 
-    private func askLLM(filename: String, ext: String, text: String) async -> LLMAnalysisResult? {
-        await llmService.analyze(
+    private func askLLM(filename: String, ext: String, text: String, pdfPath: String? = nil) async -> LLMAnalysisResult? {
+        let providerType = config.config.llmProvider
+        // Für Anthropic: scanned PDF direkt übergeben wenn kein Text extrahiert werden konnte
+        if let path = pdfPath, ext == "pdf", text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return await llmService.analyzePDF(
+                filename: filename,
+                pdfPath: path,
+                extractedText: text,
+                providerType: providerType
+            )
+        }
+        return await llmService.analyze(
             filename: filename,
             extension: ext,
             text: text,
-            providerType: config.config.llmProvider
+            providerType: providerType
         )
     }
 
@@ -454,18 +469,90 @@ final class FileProcessor: ObservableObject {
         return desc
     }
 
+    // MARK: - Redo
+
+    func redoRename(record: RenameRecord) {
+        guard let id = record.id else { return }
+        guard FileManager.default.fileExists(atPath: record.originalPath) else {
+            lastError = "Datei nicht gefunden: \(record.originalPath)"
+            return
+        }
+        let directory = (record.newPath as NSString).deletingLastPathComponent
+        guard FileManager.default.isWritableFile(atPath: directory) else {
+            lastError = "Keine Schreibberechtigung: \(directory)"
+            return
+        }
+        // Resolve conflict in case newPath is now taken by something else
+        let finalPath: String
+        if FileManager.default.fileExists(atPath: record.newPath) {
+            let finalName = NameGenerator.resolveConflict(
+                directory: directory,
+                proposedName: (record.newPath as NSString).lastPathComponent
+            )
+            finalPath = (directory as NSString).appendingPathComponent(finalName)
+        } else {
+            finalPath = record.newPath
+        }
+        do {
+            try FileManager.default.moveItem(atPath: record.originalPath, toPath: finalPath)
+            _ = try database.redoRename(id: id)
+            try database.markProcessed(
+                path: finalPath,
+                originalName: record.originalName,
+                newName: (finalPath as NSString).lastPathComponent,
+                category: record.category
+            )
+            lastError = nil
+            logger.info("Redo: \(record.originalName) → \((finalPath as NSString).lastPathComponent)")
+        } catch {
+            lastError = "Redo fehlgeschlagen: \(error.localizedDescription)"
+            logger.error("Redo-Fehler: \(error.localizedDescription)")
+        }
+        refreshState()
+    }
+
     // MARK: - State Refresh
 
     func refreshState() {
-        do {
-            todayCount = try database.todayRenameCount()
-            recentRenames = try database.recentRenames(limit: 5)
-        } catch {
-            logger.error("State-Refresh Fehler: \(error.localizedDescription)")
+        Task { @MainActor in
+            do {
+                self.todayCount = try await self.database.todayRenameCount()
+                self.recentRenames = try await self.database.recentRenames(limit: 5)
+            } catch {
+                self.logger.error("State-Refresh Fehler: \(error.localizedDescription)")
+            }
         }
     }
 
     // MARK: - Undo
+
+    func undoRenames(ids: [Int64]) {
+        var errors: [String] = []
+        for id in ids {
+            do {
+                guard let record = try database.undoRename(id: id) else { continue }
+                if record.dryRun { continue }
+                if FileManager.default.fileExists(atPath: record.newPath) {
+                    let origDir = (record.originalPath as NSString).deletingLastPathComponent
+                    guard FileManager.default.isWritableFile(atPath: origDir) else {
+                        errors.append("Keine Schreibberechtigung: \(origDir)")
+                        continue
+                    }
+                    try FileManager.default.moveItem(atPath: record.newPath, toPath: record.originalPath)
+                    try database.snapshotFile(path: record.originalPath, size: nil)
+                    logger.info("Undo: \(record.newName) → \(record.originalName)")
+                } else {
+                    errors.append("Nicht gefunden: \(record.newPath)")
+                    logger.warning("Undo nicht möglich: \(record.newPath)")
+                }
+            } catch {
+                errors.append(error.localizedDescription)
+                logger.error("Undo-Fehler (id=\(id)): \(error.localizedDescription)")
+            }
+        }
+        lastError = errors.isEmpty ? nil : errors.joined(separator: "\n")
+        refreshState()
+    }
 
     func undoRename(id: Int64) {
         do {
@@ -488,6 +575,7 @@ final class FileProcessor: ObservableObject {
                 }
 
                 try FileManager.default.moveItem(atPath: record.newPath, toPath: record.originalPath)
+                try database.snapshotFile(path: record.originalPath, size: nil)
                 logger.info("Undo: \(record.newName) → \(record.originalName)")
                 lastError = nil
             } else {

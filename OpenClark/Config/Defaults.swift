@@ -16,7 +16,7 @@ enum Defaults {
 
     static let llmProvider = AppConfiguration.LLMProviderType.none
     static let apiKey = ""
-    static let llmModel = "claude-haiku-4-20250414"
+    static let llmModel = "claude-haiku-4-5-20251001"
 
     static let trialDays = 14
     static let launchAtLogin = false

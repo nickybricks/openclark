@@ -18,6 +18,19 @@ protocol LLMProvider: Sendable {
         extension ext: String,
         text: String
     ) async throws -> LLMAnalysisResult
+
+    /// Analysiere PDF-Datei direkt (für Scans ohne Text-Layer). Standardimplementierung fällt auf text-basierte Analyse zurück.
+    func analyzePDF(
+        filename: String,
+        pdfPath: String,
+        extractedText: String
+    ) async throws -> LLMAnalysisResult
+}
+
+extension LLMProvider {
+    func analyzePDF(filename: String, pdfPath: String, extractedText: String) async throws -> LLMAnalysisResult {
+        try await analyze(filename: filename, extension: "pdf", text: extractedText)
+    }
 }
 
 /// Router: Leitet Anfragen an den aktiven Provider weiter.
@@ -59,6 +72,13 @@ actor LLMService {
             )
         }
 
+        // Qwen lokal via LM Studio (kein API Key nötig)
+        if config.llmProvider == .qwen {
+            providers[.qwen] = QwenProvider(
+                model: config.llmModel
+            )
+        }
+
         // Custom
         if !config.apiKey.isEmpty && config.llmProvider == .custom {
             providers[.custom] = CustomProvider(
@@ -83,8 +103,9 @@ actor LLMService {
 
         logger.info("LLM-Analyse via \(provider.name)...")
 
+        let timeout: TimeInterval = (providerType == .qwen || providerType == .ollama) ? 180 : 30
         do {
-            let result = try await withTimeout(seconds: 10) {
+            let result = try await withTimeout(seconds: timeout) {
                 try await provider.analyze(
                     filename: filename,
                     extension: ext,
@@ -95,6 +116,37 @@ actor LLMService {
             return result
         } catch {
             logger.error("LLM-Fehler: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    /// Analysiere PDF direkt (für Scans ohne Text-Layer).
+    func analyzePDF(
+        filename: String,
+        pdfPath: String,
+        extractedText: String,
+        providerType: AppConfiguration.LLMProviderType
+    ) async -> LLMAnalysisResult? {
+        guard let provider = providers[providerType] else {
+            logger.warning("Kein Provider konfiguriert für: \(providerType.rawValue)")
+            return nil
+        }
+
+        logger.info("LLM PDF-Analyse via \(provider.name)...")
+
+        let timeout: TimeInterval = (providerType == .qwen || providerType == .ollama) ? 240 : 60
+        do {
+            let result = try await withTimeout(seconds: timeout) {
+                try await provider.analyzePDF(
+                    filename: filename,
+                    pdfPath: pdfPath,
+                    extractedText: extractedText
+                )
+            }
+            logger.info("LLM PDF-Ergebnis: \(result.category) / \(result.description)")
+            return result
+        } catch {
+            logger.error("LLM PDF-Fehler: \(error.localizedDescription)")
             return nil
         }
     }
@@ -112,6 +164,27 @@ actor LLMService {
             return true
         } catch {
             return false
+        }
+    }
+
+    /// Teste Verbindung und gib detaillierten Fehler zurück.
+    func testConnectionDetailed(providerType: AppConfiguration.LLMProviderType) async -> Result<LLMAnalysisResult, Error> {
+        guard let provider = providers[providerType] else {
+            return .failure(LLMError.noProvider)
+        }
+
+        let timeout: TimeInterval = (providerType == .qwen || providerType == .ollama) ? 180 : 15
+        do {
+            let result = try await withTimeout(seconds: timeout) {
+                try await provider.analyze(
+                    filename: "test_rechnung.pdf",
+                    extension: "pdf",
+                    text: "Rechnung Nr. 12345 von Vodafone GmbH, Datum: 15.01.2024, Betrag: 39,99€"
+                )
+            }
+            return .success(result)
+        } catch {
+            return .failure(error)
         }
     }
 
@@ -144,7 +217,7 @@ enum LLMError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .timeout: return "LLM-Anfrage Timeout (10s)"
+        case .timeout: return "LLM-Anfrage Timeout"
         case .invalidResponse: return "Ungültige LLM-Antwort"
         case .apiError(let msg): return "API-Fehler: \(msg)"
         case .noProvider: return "Kein LLM-Provider konfiguriert"

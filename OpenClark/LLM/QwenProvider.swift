@@ -1,22 +1,25 @@
 import Foundation
 import PDFKit
 
-/// Lokaler Ollama Provider via URLSession.
-struct OllamaProvider: LLMProvider, Sendable {
-    let name = "Ollama (Lokal)"
+/// Lokal laufender Qwen-Provider via integriertem Ollama-Server.
+/// OllamaManager startet den Server automatisch bei Bedarf.
+struct QwenProvider: LLMProvider, Sendable {
+    let name = "Qwen (Lokal)"
     let model: String
-    let baseURL: String
 
-    init(model: String, baseURL: String = "http://localhost:11434") {
-        self.model = model.isEmpty ? "llama3.2" : model
-        self.baseURL = baseURL
+    private let baseURL = "http://127.0.0.1:11434"
+
+    init(model: String) {
+        self.model = model.isEmpty ? "qwen2.5vl:7b" : model
     }
 
     func analyze(filename: String, extension ext: String, text: String) async throws -> LLMAnalysisResult {
+        try await OllamaManager.shared.ensureServerRunning()
+
         let prompt = LLMPrompt.generate(filename: filename, extension: ext, text: text)
 
         guard let endpoint = URL(string: "\(baseURL)/api/generate") else {
-            throw LLMError.apiError("Ungültige Ollama URL: \(baseURL)")
+            throw LLMError.apiError("Ungültige Ollama URL")
         }
 
         let body: [String: Any] = [
@@ -37,12 +40,10 @@ struct OllamaProvider: LLMProvider, Sendable {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw LLMError.invalidResponse
         }
-
         guard httpResponse.statusCode == 200 else {
             let errorBody = String(data: data, encoding: .utf8) ?? "Unknown error"
             throw LLMError.apiError("HTTP \(httpResponse.statusCode): \(errorBody)")
         }
-
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let responseText = json["response"] as? String else {
             throw LLMError.invalidResponse
@@ -52,17 +53,15 @@ struct OllamaProvider: LLMProvider, Sendable {
     }
 
     func analyzePDF(filename: String, pdfPath: String, extractedText: String) async throws -> LLMAnalysisResult {
-        guard isVisionCapable else {
-            return try await analyze(filename: filename, extension: "pdf", text: extractedText)
-        }
-
         let images = PDFTextExtractor.renderPagesAsBase64JPEG(from: pdfPath)
         guard !images.isEmpty else {
             return try await analyze(filename: filename, extension: "pdf", text: extractedText)
         }
 
+        try await OllamaManager.shared.ensureServerRunning()
+
         guard let endpoint = URL(string: "\(baseURL)/api/generate") else {
-            throw LLMError.apiError("Ungültige Ollama URL: \(baseURL)")
+            throw LLMError.apiError("Ungültige Ollama URL")
         }
 
         let body: [String: Any] = [
@@ -81,8 +80,8 @@ struct OllamaProvider: LLMProvider, Sendable {
 
         guard let httpResponse = response as? HTTPURLResponse else { throw LLMError.invalidResponse }
         guard httpResponse.statusCode == 200 else {
-            // Model responded but rejected images — fall back to text
-            return try await analyze(filename: filename, extension: "pdf", text: extractedText)
+            let errorBody = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw LLMError.apiError("HTTP \(httpResponse.statusCode): \(errorBody)")
         }
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let responseText = json["response"] as? String else {
@@ -90,12 +89,5 @@ struct OllamaProvider: LLMProvider, Sendable {
         }
 
         return try LLMResponseParser.parse(responseText)
-    }
-
-    /// True for Ollama model names that are known vision-capable.
-    private var isVisionCapable: Bool {
-        let lower = model.lowercased()
-        return lower.contains("llava") || lower.contains("vision") || lower.contains("vl")
-            || lower.contains("moondream") || lower.contains("minicpm") || lower.contains("bakllava")
     }
 }
